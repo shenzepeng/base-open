@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd        http://dubbo.apache.org/schema/dubbo        http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!-- 本机服务dubbo 服务定义 -->
+    <dubbo:application name="${dubbo.application.name}"
+                       owner="${dubbo.application.owner}"/>
+    <dubbo:annotation/>
+    <dubbo:consumer check="false"/>
+    <!-- 通用配置 -->
+    <dubbo:protocol name="dobbo" port="-1"/>
+    <dubbo:registry address="nacos://www.shenzepengzuishuai.cn:8848"/>
+    <dubbo:monitor protocol="dubbo"/>
+    <dubbo:provider retries="3" timeout="5000" threads="400"/>
+
+<!--    &lt;!&ndash; 声明需要暴露的服务接口 &ndash;&gt;-->
+<!--    <dubbo:service interface="kxg.sso.mediacenter.service.DemoService" ref="demoService" />-->
+
+<!--    &lt;!&ndash; 和本地bean一样实现服务 &ndash;&gt;-->
+<!--    <bean id="demoService" class="kxg.sso.mediacenter.provider.dubbo.service.DemoServiceImpl" />-->
+</beans>
