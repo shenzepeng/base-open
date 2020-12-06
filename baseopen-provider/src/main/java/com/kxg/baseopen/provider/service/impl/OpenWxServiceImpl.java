@@ -71,6 +71,7 @@ public class OpenWxServiceImpl implements OpenWxService {
         }
         try {
             // aes加密的消息
+
             String decryptMsgTicket = decryptMsg(requestBody, timestamp,
                     nonce, msgSignature);
             if (StringUtils.isEmpty(decryptMsgTicket)) {
