@@ -69,7 +69,7 @@ public class OpenWxController {
 
     @Autowired
     private SaveCallInfoMapper saveCallInfoMapper;
-    @RequestMapping("{appId}/callback")
+    @PostMapping("{appId}/callback")
     public Object callback(@RequestBody(required = false) String requestBody,
                            @PathVariable("appId") String appId,
                            @RequestParam("signature") String signature,
