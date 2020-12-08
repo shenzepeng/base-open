@@ -77,7 +77,7 @@
 <!--        <table tableName="t_component_verify_ticket" domainObjectName="ComponentVerifyTicket">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="t_open_wx_access_token" domainObjectName="OpenWxAccessToken">
+        <table tableName="t_save_call_info" domainObjectName="SaveCallInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
     </context>

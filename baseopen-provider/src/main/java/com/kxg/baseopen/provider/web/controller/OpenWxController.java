@@ -1,8 +1,11 @@
 package com.kxg.baseopen.provider.web.controller;
 
+import com.kxg.baseopen.provider.mapper.SaveCallInfoMapper;
+import com.kxg.baseopen.provider.pojo.SaveCallInfo;
 import com.kxg.baseopen.provider.service.OpenWxService;
 import com.kxg.baseopen.provider.service.impl.MailService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,6 +65,33 @@ public class OpenWxController {
 
         return openWxService.receiverVerifyTicket(requestBody, timestamp,
                 nonce,signature,encType,msgSignature);
+    }
+
+    @Autowired
+    private SaveCallInfoMapper saveCallInfoMapper;
+    @RequestMapping("{appId}/callback")
+    public Object callback(@RequestBody(required = false) String requestBody,
+                           @PathVariable("appId") String appId,
+                           @RequestParam("signature") String signature,
+                           @RequestParam("timestamp") String timestamp,
+                           @RequestParam("nonce") String nonce,
+                           @RequestParam("openid") String openid,
+                           @RequestParam("encrypt_type") String encType,
+                           @RequestParam("msg_signature") String msgSignature) {
+       log.info("\n接收微信请求：[appId=[{}], openid=[{}], signature=[{}], encType=[{}], msgSignature=[{}],"
+                        + " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
+                appId, openid, signature, encType, msgSignature, timestamp, nonce, requestBody);
+        SaveCallInfo saveCallInfo=new SaveCallInfo();
+        saveCallInfo.setAppId(appId);
+        saveCallInfo.setEnctype(encType);
+        saveCallInfo.setMsgsignature(msgSignature);
+        saveCallInfo.setNonce(nonce);
+        saveCallInfo.setOpenid(openid);
+        saveCallInfo.setRequestBody(requestBody);
+        saveCallInfo.setTimestamp(timestamp);
+        saveCallInfo.setSignature(signature);
+        saveCallInfoMapper.insertSelective(saveCallInfo);
+        return "";
     }
 
 

@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.kxg.baseopen.provider.common.WechatOpenProperties;;
+import com.kxg.baseopen.provider.crypt.AesException;
 import com.kxg.baseopen.provider.crypt.OpenSHA1;
 import com.kxg.baseopen.provider.crypt.WXBizMsgCrypt;
 import com.kxg.baseopen.provider.dao.OpenWxAccessTokenDao;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.open.api.WxOpenConfigStorage;
 import me.chanjar.weixin.open.api.WxOpenFastMaService;
@@ -28,6 +30,7 @@ import me.chanjar.weixin.open.bean.WxOpenGetResult;
 import me.chanjar.weixin.open.bean.WxOpenMaCodeTemplate;
 import me.chanjar.weixin.open.bean.message.WxOpenXmlMessage;
 import me.chanjar.weixin.open.bean.result.*;
+import me.chanjar.weixin.open.util.WxOpenCryptUtil;
 import me.chanjar.weixin.open.util.json.WxOpenGsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +74,6 @@ public class OpenWxServiceImpl implements OpenWxService {
         }
         try {
             // aes加密的消息
-
             String decryptMsgTicket = decryptMsg(requestBody, timestamp,
                     nonce, msgSignature);
             if (StringUtils.isEmpty(decryptMsgTicket)) {
@@ -88,6 +90,59 @@ public class OpenWxServiceImpl implements OpenWxService {
         return "success";
     }
 
+    @Override
+    public String weChatCallBack(String requestBody, String appId, String signature, String timestamp, String nonce, String openid, String encType, String msgSignature) {
+
+        if (!StringUtils.equalsIgnoreCase("aes", encType) || !!checkSignature(WechatOpenProperties.componentToken, timestamp, nonce, signature)) {
+            throw new IllegalArgumentException("非法请求，可能属于伪造的请求！");
+        }
+        try {
+            String decryptMsgTicket = decryptMsg(requestBody, timestamp,
+                    nonce, msgSignature);
+            if (StringUtils.isEmpty(decryptMsgTicket)) {
+                throw new RuntimeException("aes加密的消息出现问题，值为null");
+            }
+
+        }catch (Exception e){
+
+        }
+
+//        String out = "";
+//        // aes加密的消息
+//        WxMpXmlMessage inMessage = WxOpenXmlMessage.fromEncryptedMpXml(requestBody, wxOpenService.getWxOpenConfigStorage(), timestamp, nonce, msgSignature);
+//        this.logger.debug("\n消息解密后内容为：\n{} ", inMessage.toString());
+//        // 全网发布测试用例
+//        if (StringUtils.equalsAnyIgnoreCase(appId, "wxd101a85aa106f53e", "wx570bc396a51b8ff8")) {
+//            try {
+//                if (StringUtils.equals(inMessage.getMsgType(), "text")) {
+//                    if (StringUtils.equals(inMessage.getContent(), "TESTCOMPONENT_MSG_TYPE_TEXT")) {
+//                        out = WxOpenXmlMessage.wxMpOutXmlMessageToEncryptedXml(
+//                                WxMpXmlOutMessage.TEXT().content("TESTCOMPONENT_MSG_TYPE_TEXT_callback")
+//                                        .fromUser(inMessage.getToUser())
+//                                        .toUser(inMessage.getFromUser())
+//                                        .build(),
+//                                wxOpenService.getWxOpenConfigStorage()
+//                        );
+//                    } else if (StringUtils.startsWith(inMessage.getContent(), "QUERY_AUTH_CODE:")) {
+//                        String msg = inMessage.getContent().replace("QUERY_AUTH_CODE:", "") + "_from_api";
+//                        WxMpKefuMessage kefuMessage = WxMpKefuMessage.TEXT().content(msg).toUser(inMessage.getFromUser()).build();
+//                        wxOpenService.getWxOpenComponentService().getWxMpServiceByAppid(appId).getKefuService().sendKefuMessage(kefuMessage);
+//                    }
+//                } else if (StringUtils.equals(inMessage.getMsgType(), "event")) {
+//                    WxMpKefuMessage kefuMessage = WxMpKefuMessage.TEXT().content(inMessage.getEvent() + "from_callback").toUser(inMessage.getFromUser()).build();
+//                    wxOpenService.getWxOpenComponentService().getWxMpServiceByAppid(appId).getKefuService().sendKefuMessage(kefuMessage);
+//                }
+//            } catch (WxErrorException e) {
+//                logger.error("callback", e);
+//            }
+//        }else{
+//            WxMpXmlOutMessage outMessage = wxOpenService.getWxOpenMessageRouter().route(inMessage, appId);
+//            if(outMessage != null){
+//                out = WxOpenXmlMessage.wxMpOutXmlMessageToEncryptedXml(outMessage, wxOpenService.getWxOpenConfigStorage());
+//            }
+//        }
+        return "out";
+    }
 
 
     @Override
@@ -105,6 +160,9 @@ public class OpenWxServiceImpl implements OpenWxService {
         }
         return openWxAccessToken.getAccessToken();
     }
+
+
+
     private void  addNewAccessToken(String accessToken){
         OpenWxAccessToken openWxAccessToken=new OpenWxAccessToken();
         openWxAccessToken.setAccessToken(accessToken);

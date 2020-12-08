@@ -1,6 +1,7 @@
 package com.kxg.baseopen.provider.web.controller;
 
 import com.kxg.baseopen.provider.common.KxgResponse;
+import com.kxg.baseopen.provider.config.SzpJsonResult;
 import com.kxg.baseopen.provider.service.OpenWxTemplateService;
 import com.kxg.baseopen.provider.web.response.FindAllTemplateDraftResponse;
 import com.kxg.baseopen.provider.web.response.FindAllTemplateResponse;
@@ -26,8 +27,8 @@ public class TemplateController {
      * @throws WxErrorException 获取失败时返回，具体错误码请看此接口的注释文档
      */
     @PostMapping("draft")
-    public KxgResponse<FindAllTemplateDraftResponse> getTemplateDraftList(){
-        return openWxTemplateService.getTemplateDraftList();
+    public SzpJsonResult<FindAllTemplateDraftResponse> getTemplateDraftList(){
+        return SzpJsonResult.ok(openWxTemplateService.getTemplateDraftList());
     }
 
     /**
@@ -37,8 +38,8 @@ public class TemplateController {
      * @throws WxErrorException 获取失败时返回，具体错误码请看此接口的注释文档
      */
     @PostMapping("get")
-    public KxgResponse<FindAllTemplateResponse> getTemplateList(){
-        return openWxTemplateService.getTemplateList();
+    public SzpJsonResult<FindAllTemplateResponse> getTemplateList(){
+        return SzpJsonResult.ok(openWxTemplateService.getTemplateList());
     }
 
 }
