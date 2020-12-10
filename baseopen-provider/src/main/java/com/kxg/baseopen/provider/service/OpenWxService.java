@@ -48,4 +48,6 @@ public interface OpenWxService {
                           String encType,
                           String msgSignature);
 
+    
+
 }

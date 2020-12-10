@@ -77,7 +77,7 @@
 <!--        <table tableName="t_component_verify_ticket" domainObjectName="ComponentVerifyTicket">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="t_save_call_info" domainObjectName="SaveCallInfo">
+        <table tableName="t_fast_register" domainObjectName="FastRegister">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
     </context>

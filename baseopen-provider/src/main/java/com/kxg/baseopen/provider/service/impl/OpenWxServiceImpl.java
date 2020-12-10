@@ -20,7 +20,6 @@ import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
-import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.open.api.WxOpenConfigStorage;
 import me.chanjar.weixin.open.api.WxOpenFastMaService;
 import me.chanjar.weixin.open.api.WxOpenMaService;
@@ -166,7 +165,7 @@ public class OpenWxServiceImpl implements OpenWxService {
     private void  addNewAccessToken(String accessToken){
         OpenWxAccessToken openWxAccessToken=new OpenWxAccessToken();
         openWxAccessToken.setAccessToken(accessToken);
-        Long expirationTime = System.currentTimeMillis() + 30 * 1000 * 110;
+        Long expirationTime = System.currentTimeMillis() + 60 * 1000 * 110;
         openWxAccessToken.setExpirationTime(expirationTime.toString());
         openWxAccessTokenDao.addAccessToken(openWxAccessToken);
     }

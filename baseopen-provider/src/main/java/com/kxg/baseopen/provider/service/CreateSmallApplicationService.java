@@ -15,6 +15,10 @@ public interface CreateSmallApplicationService {
      */
     String FAST_REGISTER_WEAPP_URL = "https://api.weixin.qq.com/cgi-bin/component/fastregisterweapp?action=create";
     String FAST_REGISTER_WEAPP_SEARCH_URL = "https://api.weixin.qq.com/cgi-bin/component/fastregisterweapp?action=search";
+    /**
+     * 预售权码
+     */
+    String PRE_AUTH_CODE="https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode";
 
     /**
      * https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=21538208049W8uwq&token=&lang=zh_CN
@@ -46,4 +50,9 @@ public interface CreateSmallApplicationService {
      */
     WxOpenResult fastRegisterWeappSearch(FastRegisterSearchRequest registerSearchRequest) ;
 
+    /**
+     * 获取预售权码
+     * @return
+     */
+    String getPreAuthCode();
 }

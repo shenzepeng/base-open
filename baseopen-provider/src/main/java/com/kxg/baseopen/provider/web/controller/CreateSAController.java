@@ -59,4 +59,13 @@ public class CreateSAController {
 
     }
 
+    /**
+     * 获取预售权码
+     * @return
+     */
+    @PostMapping("pre/code")
+    public SzpJsonResult<String> getPreCode(){
+        return SzpJsonResult.ok(createSmallApplicationService.getPreAuthCode());
+    }
+
 }
