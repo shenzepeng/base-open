@@ -8,10 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.open.bean.result.WxOpenResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 要写注释呀
@@ -60,12 +57,21 @@ public class CreateSAController {
     }
 
     /**
-     * 获取预售权码
+     *  生成客户授权连接
+     * @param appId 被授权的appd
      * @return
      */
-    @PostMapping("pre/code")
-    public SzpJsonResult<String> getPreCode(){
-        return SzpJsonResult.ok(createSmallApplicationService.getPreAuthCode());
+    @PostMapping("get/custom/make")
+    public SzpJsonResult<String> getCustomMake(@RequestParam(name = "appId") String appId){
+        return SzpJsonResult.ok(createSmallApplicationService.getCustomerMakeSureUrl(appId));
     }
+
+
+    @PostMapping("call/back/code")
+    public SzpJsonResult<String> getCallBackCode(@RequestParam("auth_code") String code,
+                                                 @RequestParam("expires_in")Integer time){
+        return SzpJsonResult.ok(createSmallApplicationService.getCallBackUrl(code,time));
+    }
+
 
 }

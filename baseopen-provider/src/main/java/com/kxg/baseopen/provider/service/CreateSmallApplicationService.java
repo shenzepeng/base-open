@@ -19,7 +19,16 @@ public interface CreateSmallApplicationService {
      * 预售权码
      */
     String PRE_AUTH_CODE="https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode";
-
+    /**
+     * 生成客户确认的URL
+     */
+    String MAKE_SURE_URL="https://mp.weixin.qq.com/safe/bindcomponent?action=bindcomponent&no_scan=1";
+    /**
+     * 通过微信回调
+     * auth_code 获取微信的
+     * refresh token
+     */
+    String GET_APP_REFRESH_CODE="https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token=";
     /**
      * https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=21538208049W8uwq&token=&lang=zh_CN
      * 第三方平台快速创建小程序.
@@ -50,9 +59,13 @@ public interface CreateSmallApplicationService {
      */
     WxOpenResult fastRegisterWeappSearch(FastRegisterSearchRequest registerSearchRequest) ;
 
+
     /**
-     * 获取预售权码
+     * 获取客户授权的链接
+     * @param appId
      * @return
      */
-    String getPreAuthCode();
+    String getCustomerMakeSureUrl(String appId);
+
+    String getCallBackUrl(String authCode,Integer expiredTime);
 }

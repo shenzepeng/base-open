@@ -6,6 +6,6 @@ import lombok.Data;
  * 预售权码
  */
 @Data
-public class ComponetAppIdDto {
-    private String component_appid;
+public class PreAuthCodeDto {
+    private String pre_auth_code;
 }

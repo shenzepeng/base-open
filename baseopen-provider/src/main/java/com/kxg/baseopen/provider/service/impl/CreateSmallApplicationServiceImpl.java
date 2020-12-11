@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.kxg.baseopen.provider.common.WechatOpenProperties;
-import com.kxg.baseopen.provider.dto.ComponetAppIdDto;
+import com.kxg.baseopen.provider.dto.PreAuthCodeDto;
 import com.kxg.baseopen.provider.pojo.FastRegister;
 import com.kxg.baseopen.provider.service.CreateSmallApplicationService;
 import com.kxg.baseopen.provider.service.FastRegisterService;
@@ -13,6 +13,7 @@ import com.kxg.baseopen.provider.utils.HttpClientUtil;
 import com.kxg.baseopen.provider.utils.JsonUtils;
 import com.kxg.baseopen.provider.web.request.FastRegisterRequest;
 import com.kxg.baseopen.provider.web.request.FastRegisterSearchRequest;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.open.bean.WxOpenMaCodeTemplate;
@@ -34,6 +35,10 @@ import java.util.Map;
 @Service
 public class CreateSmallApplicationServiceImpl implements CreateSmallApplicationService {
     private static final JsonParser JSON_PARSER = new JsonParser();
+    /**
+     * 微信回调，获取code的接口url
+     */
+    private static final String WX_CALL_BACK_URL="http://www.shenzepengzuishuai.cn/create/sa/call/back/code";
     @Autowired
     private OpenWxService openWxService;
     @Autowired
@@ -96,7 +101,6 @@ public class CreateSmallApplicationServiceImpl implements CreateSmallApplication
         log.info("FAST_REGISTER_WEAPP_URL targetUrl {}",targetUrl);
         String response = postInfo(targetUrl, map);
         WxOpenResult wxOpenResult = WxOpenGsonBuilder.create().fromJson(response, WxOpenResult.class);
-
         FastRegister upFasterRegister = new FastRegister();
         upFasterRegister.setErrCode(wxOpenResult.getErrcode());
         upFasterRegister.setErrorMsg(wxOpenResult.getErrmsg());
@@ -130,11 +134,51 @@ public class CreateSmallApplicationServiceImpl implements CreateSmallApplication
 
     }
 
+
+    /**
+     * 生成客户需要的链接
+     * @param appId
+     * @return
+     */
+    @SneakyThrows
+    @Override
+    public String getCustomerMakeSureUrl(String appId) {
+        StringBuilder targetUrl=new StringBuilder();
+        targetUrl.append(MAKE_SURE_URL);
+        targetUrl.append("&component_appid="+WechatOpenProperties.componentAppId);
+        //预生成码
+        targetUrl.append("&pre_auth_code="+getPreAuthCode());
+        //回调，获取微信code的接口
+        String   redirectUrl  =   java.net.URLEncoder.encode(WX_CALL_BACK_URL,"utf-8");
+        targetUrl.append("&redirect_uri="+redirectUrl);
+        //限制能绑定的appid
+        targetUrl.append("&biz_appid="+appId);
+        targetUrl.append("#wechat_redirect");
+        return targetUrl.toString();
+    }
+
+    /**
+     * 微信回调的code
+     * 获取app的授权信息
+     * @param code
+     * @param time
+     * @return
+     */
+    @Override
+    public String getCallBackUrl(String code, Integer time) {
+        String targetURl=GET_APP_REFRESH_CODE+openWxService.getAccessToken();
+        Map<String,Object> map=new HashMap<>();
+        map.put("component_appid",WechatOpenProperties.componentAppId);
+        map.put("authorization_code",code);
+        String postInfo = postInfo(targetURl, map);
+
+        return null;
+    }
+
     /**
      * 获取预售权码
      * @return
      */
-    @Override
     public String getPreAuthCode() {
         Map<String,Object> map=new HashMap<>();
         map.put("component_appid", WechatOpenProperties.componentAppId);
@@ -143,8 +187,8 @@ public class CreateSmallApplicationServiceImpl implements CreateSmallApplication
         if(StringUtils.isEmpty(postInfo)){
             throw new RuntimeException("获取预授权码失败");
         }
-        ComponetAppIdDto componetAppIdDto = JsonUtils.toBean(postInfo, ComponetAppIdDto.class);
-        return componetAppIdDto.getComponent_appid();
+        PreAuthCodeDto preAuthCodeDto = JsonUtils.toBean(postInfo, PreAuthCodeDto.class);
+        return preAuthCodeDto.getPre_auth_code();
     }
 
     private String postInfo(String targetUrl, Map<String, Object> bodyMsg) {
@@ -153,4 +197,6 @@ public class CreateSmallApplicationServiceImpl implements CreateSmallApplication
         accessTokenMap.put("component_access_token", accessToken);
         return HttpClientUtil.postJson(targetUrl, bodyMsg, accessTokenMap);
     }
+
+
 }
