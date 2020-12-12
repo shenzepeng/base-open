@@ -58,16 +58,19 @@ public class CreateSAController {
 
     /**
      *  生成客户授权连接
+     *      * @param appId 被授权的appd
      * @param appId 被授权的appd
+     * @param useQrCode 0不使用二维码 1使用二维码
      * @return
      */
-    @PostMapping("get/custom/make")
-    public SzpJsonResult<String> getCustomMake(@RequestParam(name = "appId") String appId){
-        return SzpJsonResult.ok(createSmallApplicationService.getCustomerMakeSureUrl(appId));
+    @GetMapping("get/custom/make")
+    public String getCustomMake(@RequestParam(name = "appId",required = false) String appId,
+                                               @RequestParam(name="qrCode",defaultValue = "0")String useQrCode){
+        return createSmallApplicationService.getCustomerMakeSureUrl(appId,useQrCode);
     }
 
 
-    @PostMapping("call/back/code")
+    @GetMapping("call/back/code")
     public SzpJsonResult<String> getCallBackCode(@RequestParam("auth_code") String code,
                                                  @RequestParam("expires_in")Integer time){
         return SzpJsonResult.ok(createSmallApplicationService.getCallBackUrl(code,time));

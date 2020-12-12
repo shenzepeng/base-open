@@ -27,6 +27,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.alibaba.boot:nacos-config-spring-boot-starter:0.2.1" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.nacos:nacos-spring-context:0.2.2-RC1" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.spring:spring-context-support:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.boot:nacos-config-spring-boot-autoconfigure:0.2.1" level="project" />
+    <orderEntry type="library" name="Maven: com.alibaba.boot:nacos-spring-boot-base:0.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-mail:2.0.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:5.0.9.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.0.9.RELEASE" level="project" />

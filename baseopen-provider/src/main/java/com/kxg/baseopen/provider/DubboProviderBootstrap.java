@@ -1,5 +1,6 @@
 package com.kxg.baseopen.provider;
 
+import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -11,6 +12,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @MapperScan("com.kxg.baseopen.provider.mapper")
 @ImportResource(locations = {"classpath:spring-dubbo.xml"})
 @EnableSwagger2
+@NacosPropertySource(dataId = "open_base", autoRefreshed = true)
 @SpringBootApplication
 public class DubboProviderBootstrap  extends SpringBootServletInitializer {
 

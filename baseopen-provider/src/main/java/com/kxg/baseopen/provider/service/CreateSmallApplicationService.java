@@ -23,6 +23,12 @@ public interface CreateSmallApplicationService {
      * 生成客户确认的URL
      */
     String MAKE_SURE_URL="https://mp.weixin.qq.com/safe/bindcomponent?action=bindcomponent&no_scan=1";
+
+    /**
+     * 获取用户授权小程序
+     * 的扫码二维码
+     */
+    String SCAN_QR_CODE_URL="https://mp.weixin.qq.com/cgi-bin/componentloginpage";
     /**
      * 通过微信回调
      * auth_code 获取微信的
@@ -65,7 +71,7 @@ public interface CreateSmallApplicationService {
      * @param appId
      * @return
      */
-    String getCustomerMakeSureUrl(String appId);
+    String getCustomerMakeSureUrl(String appId,String useQrCode);
 
-    String getCallBackUrl(String authCode,Integer expiredTime);
+    String getCallBackUrl(String authCode,Integer  expiredTime);
 }
