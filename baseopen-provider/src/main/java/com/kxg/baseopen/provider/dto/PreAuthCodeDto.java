@@ -1,5 +1,6 @@
 package com.kxg.baseopen.provider.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -7,5 +8,6 @@ import lombok.Data;
  */
 @Data
 public class PreAuthCodeDto {
-    private String pre_auth_code;
+    @JsonProperty("pre_auth_code")
+    private String preAuthCode;
 }

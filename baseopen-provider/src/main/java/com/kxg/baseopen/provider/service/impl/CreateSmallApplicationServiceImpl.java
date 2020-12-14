@@ -6,7 +6,10 @@ import com.kxg.baseopen.provider.common.WechatOpenProperties;
 import com.kxg.baseopen.provider.dao.AuthorAccessTokenDao;
 import com.kxg.baseopen.provider.dao.AuthorizerInfoDao;
 import com.kxg.baseopen.provider.dao.CallBackCodeDao;
+import com.kxg.baseopen.provider.dto.CheckWxNameDto;
 import com.kxg.baseopen.provider.dto.PreAuthCodeDto;
+import com.kxg.baseopen.provider.dto.request.SettingWxNameRequest;
+import com.kxg.baseopen.provider.dto.response.SettingWxNameResponse;
 import com.kxg.baseopen.provider.dto.wxauthor.JsonsRootBean;
 import com.kxg.baseopen.provider.pojo.AuthorizerInfo;
 import com.kxg.baseopen.provider.pojo.AuthorizerToken;
@@ -28,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
+import com.kxg.baseopen.provider.dto.getappaccesstoken.AppAccessToken;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +43,8 @@ import java.util.Map;
 @Service
 public class CreateSmallApplicationServiceImpl implements CreateSmallApplicationService {
     private static final JsonParser JSON_PARSER = new JsonParser();
-
+    @NacosValue(value = "${WX_CALL_BACK_URL}",autoRefreshed = true)
+    private String WX_CALL_BACK_URL;
     @Autowired
     private CallBackCodeDao callBackCodeDao;
     @Autowired
@@ -50,7 +54,7 @@ public class CreateSmallApplicationServiceImpl implements CreateSmallApplication
     /**
      * 微信回调，获取code的接口url
      */
-    private static final String WX_CALL_BACK_URL="http://shenzepengzuishuai.cn/baseopen-provider-1.0.0/create/sa/call/back/code";
+//    private static final String WX_CALL_BACK_URL="http://shenzepengzuishuai.cn/baseopen-provider-1.0.0/create/sa/call/back/code";
     private static final String REDIRECT_URL="http://shenzepengzuishuai.cn/baseopen-provider-1.0.0/create/sa/redirect";
     @Autowired
     private OpenWxService openWxService;
@@ -230,6 +234,78 @@ public class CreateSmallApplicationServiceImpl implements CreateSmallApplication
         return "授权成功";
     }
 
+    @Override
+    public String getLastAppLastAccessToken(String appId) {
+        List<AuthorizerToken> lastAuthorToken = authorAccessTokenDao.findLastAuthorToken(appId);
+        List<AuthorizerInfo> lastAppIdInfo = authorizerInfoDao.findLastAppIdInfo(appId);
+        if (CollectionUtils.isEmpty(lastAppIdInfo)){
+            throw new RuntimeException("改商户未授权");
+        }
+        Map<String,Object> map=new HashMap<>();
+        map.put("component_appid",WechatOpenProperties.componentAppId);
+        map.put("authorizer_appid",lastAppIdInfo.get(0).getAuthorizerAppid());
+        map.put("authorizer_refresh_token",lastAppIdInfo.get(0).getAuthorizerRefreshToken());
+        String targetUrl=GET_APP_LAST_ACCESS_TOKEN+ openWxService.getAccessToken();
+        if (CollectionUtils.isEmpty(lastAuthorToken)||Long.parseLong(lastAuthorToken.get(0).getExpiredTime())<System.currentTimeMillis()){
+            String postInfo = postInfo(targetUrl, map);
+            AppAccessToken appAccessToken = JsonUtils.toBean(postInfo, AppAccessToken.class);
+            save(appAccessToken,appId);
+            return appAccessToken.getAuthorizerAccessToken();
+        }
+        return lastAuthorToken.get(0).getAuthorizerAccessToken();
+    }
+
+    @Override
+    public SettingWxNameResponse setAppName(SettingWxNameRequest request){
+        //获取小程序最新的token
+        String lastAppLastAccessToken = getLastAppLastAccessToken(request.getAppId());
+        String targetUrl=SET_APP_NAME+lastAppLastAccessToken;
+        Map<String,Object> map=new HashMap<>();
+        map.put("nick_name",request.getNickName());
+        if (CollectionUtils.isEmpty(request.getNamingOtherStuff())){
+            for (int i = 0; i < request.getNamingOtherStuff().size(); i++) {
+                map.put("naming_other_stuff_"+i,request.getNamingOtherStuff().get(i));
+            }
+        }
+        String postInfo = postInfo(targetUrl, map);
+        return JsonUtils.toBean(postInfo,SettingWxNameResponse.class);
+    }
+
+    /**
+     * 检查小程序的名称
+     * @param appId
+     * @param name
+     * @return
+     */
+    @Override
+    public CheckWxNameDto checkAppName(String appId, String name) {
+        //获取小程序最新的token
+        String lastAppLastAccessToken = getLastAppLastAccessToken(appId);
+        String targetUrl=CHECK_APP_NAME+lastAppLastAccessToken;
+        Map<String,Object> map=new HashMap<>();
+        map.put("nick_name",name);
+        String postInfo = postInfo(targetUrl, map);
+        return  JsonUtils.toBean(postInfo,CheckWxNameDto.class);
+    }
+
+    /**
+     * 获取小程序最新的
+     * @param appAccessToken
+     * @param appId
+     */
+    private void save(AppAccessToken appAccessToken,String appId){
+        AuthorizerToken authorizerToken=new AuthorizerToken();
+        Long expirationTime = System.currentTimeMillis() + 30 * 1000 * 110;
+        authorizerToken.setExpiredTime(expirationTime.toString());
+        authorizerToken.setAuthorizerAppid(authorizerToken.getAuthorizerAppid());
+        authorizerToken.setAuthorizerAccessToken(appAccessToken.getAuthorizerAccessToken());
+        authorAccessTokenDao.addAuthorToken(authorizerToken);
+        AuthorizerInfo authorizerInfo=new AuthorizerInfo();
+        authorizerInfo.setAuthorizerAppid(appId);
+        authorizerInfo.setAuthorizerRefreshToken(appAccessToken.getAuthorizerAccessToken());
+        authorizerInfoDao.add(authorizerInfo);
+    }
+
     /**
      * 保存小程序的refreshtoken 以及相关权限信息
      * @param jsonsRootBean
@@ -275,7 +351,7 @@ public class CreateSmallApplicationServiceImpl implements CreateSmallApplication
             throw new RuntimeException("获取预授权码失败");
         }
         PreAuthCodeDto preAuthCodeDto = JsonUtils.toBean(postInfo, PreAuthCodeDto.class);
-        return preAuthCodeDto.getPre_auth_code();
+        return preAuthCodeDto.getPreAuthCode();
     }
 
     private String postInfo(String targetUrl, Map<String, Object> bodyMsg) {

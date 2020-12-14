@@ -19,6 +19,8 @@ import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.HttpClients;
@@ -30,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.URI;
@@ -328,7 +331,7 @@ public class HttpClientUtil {
         return nvps;
     }
 
-    public static String wormholeGroupDoPost(String url,String appKey) throws Exception {
+    public static String wormPost(String url,String appKey) throws Exception {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);// 创建httpPost
         httpPost.setHeader("Accept", "application/json");
@@ -342,6 +345,7 @@ public class HttpClientUtil {
             int state = status.getStatusCode();
             if (state == HttpStatus.SC_OK) {
                 HttpEntity responseEntity = response.getEntity();
+
                 String jsonString = EntityUtils.toString(responseEntity);
                 LOG.error("请求返回:("+jsonString+")");
                 return jsonString;
@@ -365,6 +369,70 @@ public class HttpClientUtil {
             }
         }
         return null;
+    }
+
+    /**
+     *  本地文件http上传  form表单上传
+     * @param targetUrl 目标url
+     * @param fileKey  文件key
+     * @param filePath 本地文件路径
+     * @return
+     */
+    public static String uploadForm(String targetUrl, String fileKey, String filePath) {
+        String end=null;
+        CloseableHttpClient httpClient = null;
+        CloseableHttpResponse response = null;
+        try {
+            httpClient = HttpClients.createDefault();
+            // 把一个普通参数和文件上传给下面这个地址 是一个servlet
+            HttpPost httpPost = new HttpPost(targetUrl);
+            // 把文件转换成流对象FileBody
+            FileBody bin = new FileBody(new File(filePath));
+//            StringBody appKey = new StringBody("2D82A760C145BC93", ContentType.create(
+//                    "text/plain", Consts.UTF_8));
+            HttpEntity reqEntity = MultipartEntityBuilder.create()
+                    // 相当于<input type="file" name="file"/>
+                    .addPart(fileKey, bin)
+                    // 相当于<input type="text" name="userName" value=userName>
+//                    .addPart("appKey", appKey)
+//                    .addPart("pass", password)
+                    .build();
+
+            httpPost.setEntity(reqEntity);
+            // 发起请求 并返回请求的响应
+            response = httpClient.execute(httpPost);
+            System.out.println("The response value of token:" + response.getFirstHeader("token"));
+
+            // 获取响应对象
+            HttpEntity resEntity = response.getEntity();
+            if (resEntity != null) {
+                // 打印响应长度
+                System.out.println("Response content length: " + resEntity.getContentLength());
+                // 打印响应内容
+                end= EntityUtils.toString(resEntity, Charset.forName("UTF-8"));
+            }
+            // 销毁
+            EntityUtils.consume(resEntity);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            try {
+                if(response != null){
+                    response.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if(httpClient != null){
+                    httpClient.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return end;
     }
     /**
      * 标识HTTP请求类型枚举
