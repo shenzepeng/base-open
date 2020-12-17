@@ -1,18 +1,15 @@
-package com.kxg.baseopen.provider.service;
+package com.kxg.baseopen.provider.openwx;
 
 import com.kxg.baseopen.provider.dto.request.UpLoadMediaFileRequest;
 import com.kxg.baseopen.provider.dto.response.UpLoadMediaFileResponse;
-import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.error.WxErrorException;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.InputStream;
 
 /**
  * 要写注释呀
  */
-public interface WxMediaService {
+public interface MediaService {
     String MEDIA_UPLOAD_URL = "https://api.weixin.qq.com/cgi-bin/media/upload?type=%s";
     String MEDIA_GET_URL = "https://api.weixin.qq.com/cgi-bin/media/get";
 
@@ -28,8 +25,8 @@ public interface WxMediaService {
      * @ file      文件对象
      * @return the wx media upload result
      * @throws WxErrorException the wx error exception
-     * @see (String, String, InputStream) #uploadMedia(String, String, InputStream)
+     * @see (String, String, InputStream ) #uploadMedia(String, String, InputStream)
      */
-    UpLoadMediaFileResponse uploadMedia(UpLoadMediaFileRequest request) throws WxErrorException;
+    UpLoadMediaFileResponse uploadMedia(UpLoadMediaFileRequest request) ;
 
 }

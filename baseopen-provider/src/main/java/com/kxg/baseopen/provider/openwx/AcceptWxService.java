@@ -1,13 +1,9 @@
-package com.kxg.baseopen.provider.service;
-
-import me.chanjar.weixin.open.api.WxOpenComponentService;
+package com.kxg.baseopen.provider.openwx;
 
 /**
- * 获取ticket和access token
+ * 接受微信请求
  */
-public interface OpenWxService {
-    String API_COMPONENT_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/component/api_component_token";
-
+public interface AcceptWxService {
     /**
      * 获取开放平台的ticket
      *
@@ -21,11 +17,6 @@ public interface OpenWxService {
      */
     String receiverVerifyTicket(String requestBody, String timestamp,
                                 String nonce, String signature, String encType, String msgSignature);
-
-    /**
-     * 获取最新的accessToken
-     */
-    String getAccessToken();
 
     /**
      *  微信事件推送url
@@ -47,7 +38,5 @@ public interface OpenWxService {
                           String openid,
                           String encType,
                           String msgSignature);
-
-    
 
 }

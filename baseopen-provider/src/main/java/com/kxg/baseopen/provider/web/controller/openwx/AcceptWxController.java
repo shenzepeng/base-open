@@ -1,12 +1,12 @@
-package com.kxg.baseopen.provider.web.controller;
+package com.kxg.baseopen.provider.web.controller.openwx;
 
 import com.kxg.baseopen.provider.mapper.SaveCallInfoMapper;
+import com.kxg.baseopen.provider.openwx.AcceptWxService;
 import com.kxg.baseopen.provider.pojo.SaveCallInfo;
-import com.kxg.baseopen.provider.service.OpenWxService;
 import com.kxg.baseopen.provider.service.impl.MailService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,11 +17,13 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("public/wx")
-public class OpenWxController {
+public class AcceptWxController {
     @Autowired
-    private OpenWxService openWxService;
+    private AcceptWxService acceptWxService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private SaveCallInfoMapper saveCallInfoMapper;
     /**
      * 获取开放平台的ticket
      * @param requestBody xml信息
@@ -63,12 +65,10 @@ public class OpenWxController {
                         + " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
                 signature, encType, msgSignature, timestamp, nonce, requestBody);
 
-        return openWxService.receiverVerifyTicket(requestBody, timestamp,
+        return acceptWxService.receiverVerifyTicket(requestBody, timestamp,
                 nonce,signature,encType,msgSignature);
     }
 
-    @Autowired
-    private SaveCallInfoMapper saveCallInfoMapper;
     @PostMapping("{appId}/callback")
     public Object callback(@RequestBody(required = false) String requestBody,
                            @PathVariable("appId") String appId,
@@ -78,7 +78,7 @@ public class OpenWxController {
                            @RequestParam("openid") String openid,
                            @RequestParam("encrypt_type") String encType,
                            @RequestParam("msg_signature") String msgSignature) {
-       log.info("\n接收微信请求：[appId=[{}], openid=[{}], signature=[{}], encType=[{}], msgSignature=[{}],"
+        log.info("\n接收微信请求：[appId=[{}], openid=[{}], signature=[{}], encType=[{}], msgSignature=[{}],"
                         + " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
                 appId, openid, signature, encType, msgSignature, timestamp, nonce, requestBody);
         SaveCallInfo saveCallInfo=new SaveCallInfo();
@@ -93,7 +93,4 @@ public class OpenWxController {
         saveCallInfoMapper.insertSelective(saveCallInfo);
         return "";
     }
-
-
-
 }

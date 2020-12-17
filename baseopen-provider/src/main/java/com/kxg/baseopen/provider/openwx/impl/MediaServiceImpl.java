@@ -1,45 +1,35 @@
-package com.kxg.baseopen.provider.service.impl;
+package com.kxg.baseopen.provider.openwx.impl;
 
 import com.kxg.baseopen.provider.dto.request.UpLoadMediaFileRequest;
 import com.kxg.baseopen.provider.dto.response.UpLoadMediaFileResponse;
 import com.kxg.baseopen.provider.handler.FileDirHandler;
-import com.kxg.baseopen.provider.service.CreateSmallApplicationService;
-import com.kxg.baseopen.provider.service.WxMediaService;
+import com.kxg.baseopen.provider.openwx.MediaService;
+
+import com.kxg.baseopen.provider.openwx.TokenService;
 import com.kxg.baseopen.provider.utils.HttpClientUtil;
 import com.kxg.baseopen.provider.utils.JsonUtils;
-import com.kxg.baseopen.provider.utils.VerifyFileTypeUtils;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.error.WxErrorException;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Date;
-import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * 要写注释呀
  */
-@Slf4j
 @Service
-public class WxMediaServiceImpl implements WxMediaService {
+@Slf4j
+public class MediaServiceImpl implements MediaService {
     @Autowired
-    private CreateSmallApplicationService applicationService;
+    private TokenService tokenService;
     @Autowired
     private FileDirHandler fileDir;
     final static Pattern pattern = Pattern.compile("\\S*[?]\\S*");
@@ -56,11 +46,11 @@ public class WxMediaServiceImpl implements WxMediaService {
      * @ file      文件对象
      * @return the wx media upload result
      * @throws WxErrorException the wx error exception
-     * @see (String, String, InputStream) #uploadMedia(String, String, InputStream)
+     * @see (String, String, InputStream ) #uploadMedia(String, String, InputStream)
      */
     @Override
-    public UpLoadMediaFileResponse uploadMedia(UpLoadMediaFileRequest request) throws WxErrorException {
-        String targetURl=MEDIA_UPLOAD_URL+"?access_token="+applicationService.getLastAppLastAccessToken(request.getAppId())+"&type="+request.getMediaType();
+    public UpLoadMediaFileResponse uploadMedia(UpLoadMediaFileRequest request) {
+        String targetURl=MEDIA_UPLOAD_URL+"?access_token="+tokenService.getSmallAppLastAccessToken(request.getAppId())+"&type="+request.getMediaType();
         //通过url下载文件
         String localFilePath = downByUrl(request.getUrl());
         //通本地文件上传到微信服务器
@@ -107,7 +97,7 @@ public class WxMediaServiceImpl implements WxMediaService {
                 saveFile(url, localFile);
                 log.info("imagePath {}", imagePath);
                 //对文件进行修复，有的文件没有后缀，有的胡写，通过文件头还原真正的文件
-              //  String fileType = VerifyFileTypeUtils.getFileType(localFile);
+                //  String fileType = VerifyFileTypeUtils.getFileType(localFile);
                 // deleteFile(imagePath);
             }
         } catch (Throwable e) {
@@ -148,5 +138,4 @@ public class WxMediaServiceImpl implements WxMediaService {
             file.delete();
         }
     }
-
 }

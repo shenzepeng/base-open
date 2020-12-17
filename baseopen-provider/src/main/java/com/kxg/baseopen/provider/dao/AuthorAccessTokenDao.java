@@ -30,7 +30,7 @@ public class AuthorAccessTokenDao {
         }
         Example example=new Example(AuthorizerToken.class);
         example.createCriteria()
-                .andEqualTo("appId",appId);
+                .andEqualTo("authorizerAppid",appId);
         example.orderBy("id").desc();
         RowBounds rowBounds=new RowBounds(0,1);
         return authorizerTokenMapper.selectByExampleAndRowBounds(example,rowBounds);

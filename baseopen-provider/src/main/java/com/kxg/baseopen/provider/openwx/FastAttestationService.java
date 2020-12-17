@@ -1,55 +1,20 @@
-package com.kxg.baseopen.provider.service;
+package com.kxg.baseopen.provider.openwx;
 
-import com.kxg.baseopen.provider.dto.CheckWxNameDto;
-import com.kxg.baseopen.provider.dto.request.SettingWxNameRequest;
-import com.kxg.baseopen.provider.dto.response.SettingWxNameResponse;
 import com.kxg.baseopen.provider.web.request.FastRegisterRequest;
 import com.kxg.baseopen.provider.web.request.FastRegisterSearchRequest;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.open.bean.result.WxOpenResult;
 
 /**
- * 要写注释呀
+ * 快速认证
  */
-public interface CreateSmallApplicationService {
-
+public interface FastAttestationService {
     /**
      * 快速创建小程序接口.
      */
     String FAST_REGISTER_WEAPP_URL = "https://api.weixin.qq.com/cgi-bin/component/fastregisterweapp?action=create";
     String FAST_REGISTER_WEAPP_SEARCH_URL = "https://api.weixin.qq.com/cgi-bin/component/fastregisterweapp?action=search";
-    /**
-     * 预售权码
-     */
-    String PRE_AUTH_CODE="https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode";
-    /**
-     * 生成客户确认的URL
-     */
-    String MAKE_SURE_URL="https://mp.weixin.qq.com/safe/bindcomponent?action=bindcomponent&no_scan=1";
 
-    /**
-     * 获取用户授权小程序
-     * 的扫码二维码
-     */
-    String SCAN_QR_CODE_URL="https://mp.weixin.qq.com/cgi-bin/componentloginpage";
-    /**
-     * 通过微信回调
-     * auth_code 获取微信的
-     * refresh token
-     */
-    String GET_APP_REFRESH_CODE="https://api.weixin.qq.com/cgi-bin/component/api_query_auth?component_access_token=";
-    /**
-     * 获取小程序最新的accessToken
-     */
-    String GET_APP_LAST_ACCESS_TOKEN="https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=";
-    /**
-     * 设置名称接口
-     */
-    String SET_APP_NAME="https://api.weixin.qq.com/wxa/setnickname?access_token=";
-    /**
-     * 名称查询
-     */
-    String CHECK_APP_NAME="https://api.weixin.qq.com/wxa/setnickname?access_token=";
     /**
      * https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=21538208049W8uwq&token=&lang=zh_CN
      * 第三方平台快速创建小程序.
@@ -80,42 +45,4 @@ public interface CreateSmallApplicationService {
      */
     WxOpenResult fastRegisterWeappSearch(FastRegisterSearchRequest registerSearchRequest) ;
 
-
-    /**
-     * 获取客户授权的链接
-     * @param appId
-     * @return
-     */
-    String getCustomerMakeSureUrl(String appId,String useQrCode);
-
-    /**
-     * 微信请求的callbackurl
-     * 就是通过授权连接 redirect uri
-     * @param authCode
-     * @param expiredTime
-     * @return
-     */
-    String getCallBackUrl(String authCode,Integer  expiredTime);
-
-    /**
-     * 获取小程序的最新的accessToken
-     * @param appId
-     * @return
-     */
-    String getLastAppLastAccessToken(String appId);
-
-    /**
-     * 设置小程序的名称
-     * @param request
-     * @return
-     */
-    SettingWxNameResponse setAppName(SettingWxNameRequest request);
-
-    /**
-     * 检查小程序的名称
-     * @param appId
-     * @param name
-     * @return
-     */
-    CheckWxNameDto checkAppName(String appId,String name);
 }
