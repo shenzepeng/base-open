@@ -3,6 +3,7 @@ package com.kxg.baseopen.provider.openwx.impl;
 import com.kxg.baseopen.provider.dto.CheckWxNameDto;
 import com.kxg.baseopen.provider.dto.request.*;
 import com.kxg.baseopen.provider.dto.response.*;
+import com.kxg.baseopen.provider.enums.WxActionEnums;
 import com.kxg.baseopen.provider.openwx.BaseInfoSettingService;
 import com.kxg.baseopen.provider.openwx.TokenService;
 import com.kxg.baseopen.provider.utils.HttpClientUtil;
@@ -64,7 +65,7 @@ public class BaseInfoSettingServiceImpl implements BaseInfoSettingService {
     public UpdateWxServerAddressResponse updateWxServiceAddress(UpdateWxServerAddressRequest updateWxServerAddressRequest) {
         String targetUrl=MODIFY_DOMAIN_URL+"?access_token="+tokenService.getSmallAppLastAccessToken(updateWxServerAddressRequest.getAppId());
         Map<String,Object> map=new HashMap<>();
-        map.put("action",updateWxServerAddressRequest.getAction().getAction());
+        map.put("action",WxActionEnums.formatByCode(updateWxServerAddressRequest.getAction()).getName());
         map.put("requestdomain",updateWxServerAddressRequest.getRequestDomain());
         map.put("wsrequestdomain",updateWxServerAddressRequest.getWsRequestDomain());
         map.put("uploaddomain",updateWxServerAddressRequest.getUploadDomain());
@@ -77,7 +78,7 @@ public class BaseInfoSettingServiceImpl implements BaseInfoSettingService {
     public SetWxUrlResponse setWebViewDomain(SetWxUrlRequest request)  {
         String targetUrl=SET_WEB_VIEW_DOMAIN_URL+"?access_token="+tokenService.getSmallAppLastAccessToken(request.getAppId());
         Map<String,Object> map=new HashMap<>();
-        map.put("action",request.getAction().getAction());
+        map.put("action", WxActionEnums.formatByCode(request.getAction()).getName());
         map.put("webviewdomain",request.getWebviewDomain());
         String postInfo = postInfo(targetUrl, map,null);
         return JsonUtils.toBean(postInfo,SetWxUrlResponse.class);

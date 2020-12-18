@@ -41,7 +41,7 @@ public class AuthorizationController {
      * @return
      */
     @ApiOperation("获取客户授权的链接")
-    @PostMapping("costomer/make")
+    @GetMapping("costomer/make")
     public String getCustomerMakeSureUrl(@RequestParam(required = false) String appId,@RequestParam(required = false) String useQrCode){
         return authorizationService.getCustomerMakeSureUrl(appId,useQrCode);
     }
@@ -55,7 +55,7 @@ public class AuthorizationController {
      */
     @ApiOperation("微信请求的callbackurl")
     @GetMapping("call/back/url")
-    String getCallBackUrl(@RequestParam(value = "code") String authCode, @RequestParam Integer  expiredTime){
+    public String getCallBackUrl(@RequestParam(value = "auth_code") String authCode, @RequestParam("expires_in") Integer  expiredTime){
         return authorizationService.getCallBackUrl(authCode,expiredTime);
     }
 }

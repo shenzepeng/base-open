@@ -20,10 +20,10 @@ public class UpdateWxServerAddressResponse {
      *   "downloaddomain": ["https://www.qq.com", "https://www.qq.com"]
      * }
      */
-    @JsonProperty("hit_condition")
-    private Integer errCode;
-    private String errMsg;
-    @JsonProperty("hit_condition")
+
+    private Integer errcode;
+    private String errmsg;
+    @JsonProperty("requestdomain")
     private List<String> requestDomain;
     @JsonProperty("wsrequestdomain")
     private List<String> wsRequestDomain;

@@ -1,7 +1,6 @@
 package com.kxg.baseopen.provider.dao;
 
 import com.kxg.baseopen.provider.mapper.AuthorizerTokenMapper;
-import com.kxg.baseopen.provider.pojo.AuthorizerInfo;
 import com.kxg.baseopen.provider.pojo.AuthorizerToken;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,6 +2,7 @@ package com.kxg.baseopen.provider.openwx.impl;
 
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 import com.kxg.baseopen.provider.common.WechatOpenProperties;
+import com.kxg.baseopen.provider.dao.AppIdFunDao;
 import com.kxg.baseopen.provider.dao.AuthorAccessTokenDao;
 import com.kxg.baseopen.provider.dao.AuthorizerInfoDao;
 import com.kxg.baseopen.provider.dao.CallBackCodeDao;
@@ -10,6 +11,7 @@ import com.kxg.baseopen.provider.dto.getappaccesstoken.AppAccessToken;
 import com.kxg.baseopen.provider.dto.wxauthor.JsonsRootBean;
 import com.kxg.baseopen.provider.openwx.AuthorizationService;
 import com.kxg.baseopen.provider.openwx.TokenService;
+import com.kxg.baseopen.provider.pojo.AppIdFun;
 import com.kxg.baseopen.provider.pojo.AuthorizerInfo;
 import com.kxg.baseopen.provider.pojo.AuthorizerToken;
 import com.kxg.baseopen.provider.pojo.CallBackCode;
@@ -41,6 +43,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private TokenService tokenService;
     @Autowired
     private AuthorizerInfoDao authorizerInfoDao;
+    @Autowired
+    private AppIdFunDao appIdFunDao;
     /**
      * 生成客户需要的链接
      * @param appId
@@ -85,17 +89,13 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             targetUrl.append("&auth_type=2");
         }
         StringBuilder sb=new StringBuilder();
-        sb.append("<html>");
-        sb.append("<body>");
-        sb.append("<div text-align=center>");
-        sb.append("<h3 text-align=center>");
-        sb.append("<a href=\""+targetUrl.toString()+" \">");
+        sb.append("<html style='height:100%;width:100%;padding:0;margin:0;'>");
+        sb.append("<body style='height:100%;width:100%;padding:0;margin:0;'>");
+        sb.append("<a style='width:320px;height:70px;display:flex;justify-content:center;align-items: center;border:1px solid #3688FF;border-radius:10px;position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); font-size:30px;font-weight:900;text-decoration: none; color: #3688FF;' href=\""+targetUrl.toString()+" \">");
         sb.append("点我进行授权登录");
         sb.append("</a >");
-        sb.append("</h3>");
-        sb.append("</div>");
-        sb.append("</html>");
         sb.append("</body>");
+        sb.append("</html>");
         log.info("getCustomerMakeSureUrl {}",sb.toString());
         return sb.toString();
     }
@@ -130,6 +130,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         callBackCode.setAuthorizationCode(code);
         callBackCode.setExpiredTime(time);
         callBackCodeDao.addCallBackCode(callBackCode);
+
     }
     /**
      * 小程序的初次accessToken
@@ -139,9 +140,13 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         AuthorizerToken authorizerToken=new AuthorizerToken();
         authorizerToken.setAuthorizerAccessToken(jsonsRootBean.getAuthorizationInfo().getAuthorizerAccessToken());
         authorizerToken.setAuthorizerAppid(jsonsRootBean.getAuthorizationInfo().getAuthorizerAppid());
-        Long expiredTime=System.currentTimeMillis()+60 * 1000 * 100;
+        Long expiredTime=System.currentTimeMillis()+60 * 1000 * 110;
         authorizerToken.setExpiredTime(expiredTime.toString());
         authorAccessTokenDao.addAuthorToken(authorizerToken);
+        AppIdFun appIdFun=new AppIdFun();
+        appIdFun.setAppId(jsonsRootBean.getAuthorizationInfo().getAuthorizerAppid());
+        appIdFun.setFunInfo(JsonUtils.convertObjectToJSON(jsonsRootBean));
+        appIdFunDao.addAppId(appIdFun);
     }
 
     /**
@@ -166,6 +171,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      * @param appId
      */
     private void save(AppAccessToken appAccessToken, String appId){
+
         AuthorizerToken authorizerToken=new AuthorizerToken();
         Long expirationTime = System.currentTimeMillis() + 30 * 1000 * 110;
         authorizerToken.setExpiredTime(expirationTime.toString());
@@ -187,7 +193,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         AuthorizerInfo authorizerInfo=new AuthorizerInfo();
         authorizerInfo.setAuthorizerAppid(jsonsRootBean.getAuthorizationInfo().getAuthorizerAppid());
         authorizerInfo.setAuthorizerRefreshToken(jsonsRootBean.getAuthorizationInfo().getAuthorizerRefreshToken());
-        authorizerInfo.setFuncInfo(postInfo);
         authorizerInfoDao.add(authorizerInfo);
     }
     private String postInfo(String targetUrl, Map<String, Object> bodyMsg,  HashMap<String, String> header) {

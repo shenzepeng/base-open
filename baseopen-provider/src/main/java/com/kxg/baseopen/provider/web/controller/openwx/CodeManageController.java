@@ -10,6 +10,8 @@ import com.kxg.baseopen.provider.dto.response.GetLastestAuditResponse;
 import com.kxg.baseopen.provider.dto.response.ReleaseAuditedResponse;
 import com.kxg.baseopen.provider.dto.response.SubmitAuditResponse;
 import com.kxg.baseopen.provider.openwx.CodeManageService;
+import com.kxg.baseopen.provider.web.response.FindAllTemplateDraftResponse;
+import com.kxg.baseopen.provider.web.response.FindAllTemplateResponse;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +84,30 @@ public class CodeManageController {
     @PostMapping("release/audited")
     public SzpJsonResult<ReleaseAuditedResponse> releaseAudited(@RequestBody   ReleaseAuditedRequest request) {
         return SzpJsonResult.ok(codeManageService.releaseAudited(request));
+    }
+
+
+    /**
+     * 获取草稿箱内的所有临时代码草稿.
+     *
+     * @return 草稿箱代码模板列表（draftId）
+     * @throws WxErrorException 获取失败时返回，具体错误码请看此接口的注释文档
+     */
+    @ApiOperation("获取草稿箱内的所有临时代码草稿")
+    @PostMapping("get/template/draft/list")
+    public SzpJsonResult<FindAllTemplateDraftResponse> getTemplateDraftList(){
+        return SzpJsonResult.ok(codeManageService.getTemplateDraftList());
+    }
+    /**
+     * 获取代码模版库中的所有小程序代码模版.
+     *
+     * @return 小程序代码模版列表（templateId）
+     * @throws WxErrorException 获取失败时返回，具体错误码请看此接口的注释文档
+     */
+    @ApiOperation("获取代码模版库中的所有小程序代码模版")
+    @PostMapping("get/template/list")
+    public SzpJsonResult<FindAllTemplateResponse> getTemplateList(){
+        return SzpJsonResult.ok(codeManageService.getTemplateList());
     }
 
 

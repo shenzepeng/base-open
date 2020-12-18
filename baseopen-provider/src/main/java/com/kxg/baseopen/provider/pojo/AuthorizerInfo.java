@@ -21,12 +21,6 @@ public class AuthorizerInfo {
     @Column(name = "authorizer_refresh_token")
     private String authorizerRefreshToken;
 
-    /**
-     * 权限集
-     */
-    @Column(name = "func_info")
-    private String funcInfo;
-
     @Column(name = "create_time")
     private Date createTime;
 
@@ -81,24 +75,6 @@ public class AuthorizerInfo {
      */
     public void setAuthorizerRefreshToken(String authorizerRefreshToken) {
         this.authorizerRefreshToken = authorizerRefreshToken == null ? null : authorizerRefreshToken.trim();
-    }
-
-    /**
-     * 获取权限集
-     *
-     * @return func_info - 权限集
-     */
-    public String getFuncInfo() {
-        return funcInfo;
-    }
-
-    /**
-     * 设置权限集
-     *
-     * @param funcInfo 权限集
-     */
-    public void setFuncInfo(String funcInfo) {
-        this.funcInfo = funcInfo == null ? null : funcInfo.trim();
     }
 
     /**

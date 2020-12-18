@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Data
 public class SetWxUrlRequest {
-    private WxActionEnums action;
+    private Byte action;
     private String appId;
     private List<String> webviewDomain;
 }

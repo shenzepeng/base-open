@@ -80,11 +80,14 @@
         <table tableName="t_app_authorizer_info" domainObjectName="AuthorizerInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
-        <table tableName="t_app_authorizer_token" domainObjectName="AuthorizerToken">
+        <table tableName="t_app_id_fun" domainObjectName="AppIdFun">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
-        <table tableName="t_call_back_code" domainObjectName="CallBackCode">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="t_app_authorizer_token" domainObjectName="AuthorizerToken">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
+<!--        <table tableName="t_call_back_code" domainObjectName="CallBackCode">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
     </context>
 </generatorConfiguration>
