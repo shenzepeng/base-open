@@ -77,12 +77,12 @@
 <!--        <table tableName="t_component_verify_ticket" domainObjectName="ComponentVerifyTicket">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="t_app_authorizer_info" domainObjectName="AuthorizerInfo">
+        <table tableName="t_order_info" domainObjectName="OrderInfo">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
-        <table tableName="t_app_id_fun" domainObjectName="AppIdFun">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="t_app_id_fun" domainObjectName="AppIdFun">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
 <!--        <table tableName="t_app_authorizer_token" domainObjectName="AuthorizerToken">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->

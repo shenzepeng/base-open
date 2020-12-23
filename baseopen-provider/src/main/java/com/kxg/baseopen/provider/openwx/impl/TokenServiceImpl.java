@@ -83,6 +83,7 @@ public class TokenServiceImpl implements TokenService {
         map.put("authorizer_appid",lastAppIdInfo.get(0).getAuthorizerAppid());
         map.put("authorizer_refresh_token",lastAppIdInfo.get(0).getAuthorizerRefreshToken());
         String targetUrl=GET_APP_LAST_ACCESS_TOKEN+"?component_access_token="+ getComponentAccessToken();
+        log.info("targetUrl {}",targetUrl);
         if (CollectionUtils.isEmpty(lastAuthorToken)||Long.parseLong(lastAuthorToken.get(0).getExpiredTime())<System.currentTimeMillis()){
             String postInfo = postInfo(targetUrl,map,null);
             AppAccessToken appAccessToken = JsonUtils.toBean(postInfo, AppAccessToken.class);

@@ -12,7 +12,12 @@ public interface BaseInfoSettingService {
     /**
      * 名称查询
      */
-    String CHECK_APP_NAME="https://api.weixin.qq.com/wxa/setnickname?access_token=";
+    String CHECK_APP_NAME="https://api.weixin.qq.com/cgi-bin/wxverify/checkwxverifynickname";
+
+    /**
+     * 名称设置
+     */
+    String SET_APP_NAME="https://api.weixin.qq.com/wxa/setnickname";
 
     /**
      * 绑定微信用户为小程序体验者
@@ -53,10 +58,6 @@ public interface BaseInfoSettingService {
     String BIND_TESTER_URL = "https://api.weixin.qq.com/wxa/bind_tester";
     String UNBIND_TESTER_URL = "https://api.weixin.qq.com/wxa/unbind_tester";
 
-    /**
-     * 设置名称接口
-     */
-    String SET_APP_NAME="https://api.weixin.qq.com/wxa/setnickname";
     /**
      * 修改头像
      */

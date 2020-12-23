@@ -54,7 +54,7 @@ public class BaseInfoSettingServiceImpl implements BaseInfoSettingService {
     public CheckWxNameDto checkAppName(String appId, String name) {
         //获取小程序最新的token
         String lastAppLastAccessToken = tokenService.getSmallAppLastAccessToken(appId);
-        String targetUrl=CHECK_APP_NAME+lastAppLastAccessToken;
+        String targetUrl=CHECK_APP_NAME+"?access_token="+lastAppLastAccessToken;
         Map<String,Object> map=new HashMap<>();
         map.put("nick_name",name);
         String postInfo = postInfo(targetUrl, map,null);

@@ -1,10 +1,14 @@
 package com;
 
+import java.util.UUID;
+
 /**
  * 要写注释呀
  */
 public class Test1 {
     public static void main(String[] args) {
-        System.out.println("91610116MA6W95MXXL".length());
+        String replaceAll = UUID.randomUUID().toString().replaceAll("-", "");
+        System.out.println(replaceAll.length());
+        System.out.println(replaceAll);
     }
 }
