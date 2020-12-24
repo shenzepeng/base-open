@@ -35,7 +35,7 @@ public class BaseInfoSettingServiceImpl implements BaseInfoSettingService {
         String targetUrl=SET_APP_NAME+"?access_token="+lastAppLastAccessToken;
         Map<String,Object> map=new HashMap<>();
         map.put("nick_name",request.getNickName());
-        if (CollectionUtils.isEmpty(request.getNamingOtherStuff())){
+        if (!CollectionUtils.isEmpty(request.getNamingOtherStuff())){
             for (int i = 0; i < request.getNamingOtherStuff().size(); i++) {
                 map.put("naming_other_stuff_"+i,request.getNamingOtherStuff().get(i));
             }
