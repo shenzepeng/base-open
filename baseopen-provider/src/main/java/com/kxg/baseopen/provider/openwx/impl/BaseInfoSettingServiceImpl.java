@@ -35,6 +35,7 @@ public class BaseInfoSettingServiceImpl implements BaseInfoSettingService {
         String targetUrl=SET_APP_NAME+"?access_token="+lastAppLastAccessToken;
         Map<String,Object> map=new HashMap<>();
         map.put("nick_name",request.getNickName());
+        map.put("license",request.getLicense());
         if (!CollectionUtils.isEmpty(request.getNamingOtherStuff())){
             for (int i = 0; i < request.getNamingOtherStuff().size(); i++) {
                 map.put("naming_other_stuff_"+i,request.getNamingOtherStuff().get(i));
@@ -65,7 +66,7 @@ public class BaseInfoSettingServiceImpl implements BaseInfoSettingService {
     public UpdateWxServerAddressResponse updateWxServiceAddress(UpdateWxServerAddressRequest updateWxServerAddressRequest) {
         String targetUrl=MODIFY_DOMAIN_URL+"?access_token="+tokenService.getSmallAppLastAccessToken(updateWxServerAddressRequest.getAppId());
         Map<String,Object> map=new HashMap<>();
-        map.put("action",WxActionEnums.formatByCode(updateWxServerAddressRequest.getAction()).getName());
+        map.put("action",WxActionEnums.formatByCode(updateWxServerAddressRequest.getAction()).getAction());
         map.put("requestdomain",updateWxServerAddressRequest.getRequestDomain());
         map.put("wsrequestdomain",updateWxServerAddressRequest.getWsRequestDomain());
         map.put("uploaddomain",updateWxServerAddressRequest.getUploadDomain());
