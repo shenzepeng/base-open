@@ -3,13 +3,11 @@ package com.kxg.baseopen.provider.dto.response;
 import lombok.Data;
 
 /**
- * 要写注释呀
+ * {"type":"TYPE","media_id":"MEDIA_ID","created_at":123456789}
  */
 @Data
 public class UpLoadMediaFileResponse {
-    private String url;
     private String type;
-    private String mediaId;
-    private String thumbMediaId;
-    private long createdAt;
+    private String media_id;
+    private long created_at;
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kxg.baseopen.provider.mapper.CallBackCodeMapper">
+  <resultMap id="BaseResultMap" type="com.kxg.baseopen.provider.pojo.CallBackCode">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="authorization_code" jdbcType="VARCHAR" property="authorizationCode" />
+    <result column="expired_time" jdbcType="VARCHAR" property="expiredTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

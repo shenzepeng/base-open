@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kxg.baseopen.provider.mapper.SaveCallInfoMapper">
+  <resultMap id="BaseResultMap" type="com.kxg.baseopen.provider.pojo.SaveCallInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="request_body" jdbcType="VARCHAR" property="requestBody" />
+    <result column="app_id" jdbcType="VARCHAR" property="appId" />
+    <result column="signature" jdbcType="VARCHAR" property="signature" />
+    <result column="timestamp" jdbcType="VARCHAR" property="timestamp" />
+    <result column="nonce" jdbcType="VARCHAR" property="nonce" />
+    <result column="openid" jdbcType="VARCHAR" property="openid" />
+    <result column="encType" jdbcType="VARCHAR" property="enctype" />
+    <result column="msgSignature" jdbcType="VARCHAR" property="msgsignature" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

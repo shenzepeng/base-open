@@ -10,7 +10,7 @@ import java.io.InputStream;
  * 要写注释呀
  */
 public interface MediaService {
-    String MEDIA_UPLOAD_URL = "https://api.weixin.qq.com/cgi-bin/media/upload?type=%s";
+    String MEDIA_UPLOAD_URL = "https://api.weixin.qq.com/cgi-bin/media/upload";
     String MEDIA_GET_URL = "https://api.weixin.qq.com/cgi-bin/media/get";
 
     /**

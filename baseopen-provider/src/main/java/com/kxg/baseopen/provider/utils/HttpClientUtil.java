@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -383,6 +384,9 @@ public class HttpClientUtil {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse response = null;
         try {
+            String encode = URLEncoder.encode(targetUrl, "UTF-8");
+            System.out.println("encode url:"+encode);
+
             httpClient = HttpClients.createDefault();
             // 把一个普通参数和文件上传给下面这个地址 是一个servlet
             HttpPost httpPost = new HttpPost(targetUrl);

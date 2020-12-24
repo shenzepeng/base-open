@@ -53,8 +53,10 @@ public class MediaServiceImpl implements MediaService {
         String targetURl=MEDIA_UPLOAD_URL+"?access_token="+tokenService.getSmallAppLastAccessToken(request.getAppId())+"&type="+request.getMediaType();
         //通过url下载文件
         String localFilePath = downByUrl(request.getUrl());
+        log.info("localFilePath {}",localFilePath);
         //通本地文件上传到微信服务器
         String uploadForm = HttpClientUtil.uploadForm(targetURl, "media", localFilePath);
+        log.info("uploadForm {}",uploadForm);
         //删除本地文件
         deleteFile(localFilePath);
         return JsonUtils.toBean(uploadForm, UpLoadMediaFileResponse.class);
@@ -99,6 +101,7 @@ public class MediaServiceImpl implements MediaService {
                 //对文件进行修复，有的文件没有后缀，有的胡写，通过文件头还原真正的文件
                 //  String fileType = VerifyFileTypeUtils.getFileType(localFile);
                 // deleteFile(imagePath);
+                filePath=imagePath;
             }
         } catch (Throwable e) {
             throw new RuntimeException(e);

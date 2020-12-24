@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kxg.baseopen.provider.mapper.FastRegisterMapper">
+  <resultMap id="BaseResultMap" type="com.kxg.baseopen.provider.pojo.FastRegister">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="code_type" jdbcType="VARCHAR" property="codeType" />
+    <result column="component_phone" jdbcType="VARCHAR" property="componentPhone" />
+    <result column="legal_persona_wechat" jdbcType="VARCHAR" property="legalPersonaWechat" />
+    <result column="legal_persona_name" jdbcType="VARCHAR" property="legalPersonaName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="err_code" jdbcType="VARCHAR" property="errCode" />
+    <result column="error_msg" jdbcType="VARCHAR" property="errorMsg" />
+  </resultMap>
+</mapper>
