@@ -1,10 +1,11 @@
 package com.kxg.baseopen.provider.openwx.impl;
 
+import com.kxg.baseopen.provider.dto.secondinfo.Children;
+import com.kxg.baseopen.provider.dto.secondinfo.First;
+import com.kxg.baseopen.provider.dto.secondinfo.GetSecondInfoByFirstDto;
+import com.kxg.baseopen.provider.dto.getcanaddcategory.Categories;
 import com.kxg.baseopen.provider.dto.getcanaddcategory.GetCanAddCategoryRoot;
-import com.kxg.baseopen.provider.dto.request.AddAppCategoryRequest;
-import com.kxg.baseopen.provider.dto.request.DeleteAppCategoryRequest;
-import com.kxg.baseopen.provider.dto.request.GetAppCategoryListRequest;
-import com.kxg.baseopen.provider.dto.request.GetAppSettedCategoryListRequest;
+import com.kxg.baseopen.provider.dto.request.*;
 import com.kxg.baseopen.provider.dto.response.*;
 import com.kxg.baseopen.provider.openwx.CategoryService;
 import com.kxg.baseopen.provider.openwx.TokenService;
@@ -13,8 +14,12 @@ import com.kxg.baseopen.provider.utils.JsonUtils;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,6 +48,56 @@ public class CategoryServiceImpl implements CategoryService {
         return response;
     }
 
+    @Override
+    public GetSecondInfoByFirstResponse getSecondInfoByFirst(GetSecondInfoByFirstRequest request) {
+        if (StringUtils.isEmpty(request.getFirstName())){
+            throw new RuntimeException("当前的搜索的名称不能为空");
+        }
+        GetSecondInfoByFirstResponse getSecondInfoByFirstResponse=new GetSecondInfoByFirstResponse();
+        String targetUrl=API_GET_CATEGORY+"?access_token="+tokenService.getSmallAppLastAccessToken(request.getAppId());
+        String info = getInfo(targetUrl, null);
+        GetCanAddCategoryRoot getCanAddCategoryRoot = JsonUtils.toBean(info, GetCanAddCategoryRoot.class);
+        List<Categories> categories = getCanAddCategoryRoot.getCategories_list().getCategories();
+        if (CollectionUtils.isEmpty(categories)){
+            return getSecondInfoByFirstResponse;
+        }
+        List<First> firstList=new ArrayList<>();
+        for (Categories category : categories) {
+            if (StringUtils.isEmpty(category.getName())){
+                continue;
+            }
+            if (category.getName().contains(request.getFirstName())
+                    ||category.getName().equals(request.getFirstName())){
+                First first=new First();
+                first.setId(category.getId());
+                first.setName(category.getName());
+                List<Integer> childrenIds = category.getChildren();
+                if (CollectionUtils.isEmpty(childrenIds)){
+                    continue;
+                }
+                List<Children> childrenList=new ArrayList<>();
+                for (Categories cat : categories) {
+                    if (childrenIds.contains(cat.getId())){
+                        Children children=new Children();
+                        children.setId(cat.getId());
+                        children.setName(cat.getName());
+                        children.setQualify(cat.getQualify());
+                        childrenList.add(children);
+                    }
+                }
+                if (!CollectionUtils.isEmpty(childrenList)) {
+                    first.setChildren(childrenList);
+                    firstList.add(first);
+                }
+            }
+
+        }
+        GetSecondInfoByFirstDto dto=new GetSecondInfoByFirstDto();
+        dto.setFirsts(firstList);
+        getSecondInfoByFirstResponse.setGetSecondInfoByFirstDto(dto);
+        return getSecondInfoByFirstResponse;
+    }
+
     /**
      * 获取已经设置的类目
      * @param request
@@ -65,7 +120,7 @@ public class CategoryServiceImpl implements CategoryService {
     public AddAppCategoryResponse addAppCategory(AddAppCategoryRequest request) {
         String targetUrl=API_POST_SET_CATEGORY+"?access_token="+tokenService.getSmallAppLastAccessToken(request.getAppId());
         Map<String,Object> map=new HashMap<>();
-        map.put("categories",request.getAddCategoryDto());
+        map.put("categories",request.getAddCategoryDto().getCategories());
         String postInfo = postInfo(targetUrl, map);
         return JsonUtils.toBean(postInfo,AddAppCategoryResponse.class);
     }

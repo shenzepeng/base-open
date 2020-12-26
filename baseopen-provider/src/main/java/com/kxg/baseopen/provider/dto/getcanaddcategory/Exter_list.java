@@ -8,7 +8,6 @@ import java.util.List;
  * 要写注释呀
  */
 @Data
-public class Qualify {
-    private List<Exter_list> exter_list;
-    private String remark;
+public class Exter_list {
+    private List<Inner_list> inner_list;
 }

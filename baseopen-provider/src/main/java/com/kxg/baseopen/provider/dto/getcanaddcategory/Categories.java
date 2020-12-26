@@ -9,7 +9,10 @@ import java.util.List;
  */
 @Data
 public class Categories {
-    private int id;
+    private Integer id;
     private List<Integer> children;
     private Qualify qualify;
+    private String name;
+    private Integer father;
+    private Integer level;
 }

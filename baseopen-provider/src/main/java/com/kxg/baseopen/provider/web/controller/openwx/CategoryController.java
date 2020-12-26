@@ -1,14 +1,8 @@
 package com.kxg.baseopen.provider.web.controller.openwx;
 
 import com.kxg.baseopen.provider.config.SzpJsonResult;
-import com.kxg.baseopen.provider.dto.request.AddAppCategoryRequest;
-import com.kxg.baseopen.provider.dto.request.DeleteAppCategoryRequest;
-import com.kxg.baseopen.provider.dto.request.GetAppCategoryListRequest;
-import com.kxg.baseopen.provider.dto.request.GetAppSettedCategoryListRequest;
-import com.kxg.baseopen.provider.dto.response.AddAppCategoryResponse;
-import com.kxg.baseopen.provider.dto.response.DeleteAppCategoryResponse;
-import com.kxg.baseopen.provider.dto.response.GetAPPSettedCategoryListResponse;
-import com.kxg.baseopen.provider.dto.response.GetAppCategoryListResponse;
+import com.kxg.baseopen.provider.dto.request.*;
+import com.kxg.baseopen.provider.dto.response.*;
 import com.kxg.baseopen.provider.openwx.CategoryService;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -43,7 +37,7 @@ public class CategoryController {
      */
     @ApiOperation("获取可设置类目")
     @PostMapping("get")
-    public SzpJsonResult<GetAppCategoryListResponse> getCategoryList(@RequestBody GetAppCategoryListRequest request){
+    public SzpJsonResult<GetCanAddCategoryResponse> getCategoryList(@RequestBody GetAppCategoryListRequest request){
         return SzpJsonResult.ok(categoryService.getCategoryList(request));
     }
 
@@ -58,6 +52,11 @@ public class CategoryController {
         return SzpJsonResult.ok(categoryService.getSettedCategoryList(request));
     }
 
+    @ApiOperation("通过一级类目名称获取二级类目")
+    @PostMapping("get/cat/info")
+    public SzpJsonResult<GetSecondInfoByFirstResponse> getSecondByFirst(@RequestBody GetSecondInfoByFirstRequest request){
+        return SzpJsonResult.ok(categoryService.getSecondInfoByFirst(request));
+    }
     /**
      * 添加类目
      * @param request
