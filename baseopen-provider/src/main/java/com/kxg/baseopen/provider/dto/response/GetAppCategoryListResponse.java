@@ -12,6 +12,5 @@ import java.util.List;
  */
 @Data
 public class GetAppCategoryListResponse {
-    @JsonProperty("category_list")
-    private List<WxOpenMaCategory> categoryList;
+    private List<WxOpenMaCategory> category_list;
 }

@@ -4,10 +4,7 @@ import com.kxg.baseopen.provider.dto.request.AddAppCategoryRequest;
 import com.kxg.baseopen.provider.dto.request.DeleteAppCategoryRequest;
 import com.kxg.baseopen.provider.dto.request.GetAppCategoryListRequest;
 import com.kxg.baseopen.provider.dto.request.GetAppSettedCategoryListRequest;
-import com.kxg.baseopen.provider.dto.response.AddAppCategoryResponse;
-import com.kxg.baseopen.provider.dto.response.DeleteAppCategoryResponse;
-import com.kxg.baseopen.provider.dto.response.GetAPPSettedCategoryListResponse;
-import com.kxg.baseopen.provider.dto.response.GetAppCategoryListResponse;
+import com.kxg.baseopen.provider.dto.response.*;
 import me.chanjar.weixin.common.error.WxErrorException;
 
 /**
@@ -40,7 +37,7 @@ public interface CategoryService {
      * @return the category list
      * @throws WxErrorException the wx error exception
      */
-    GetAppCategoryListResponse getCategoryList(GetAppCategoryListRequest request) ;
+    GetCanAddCategoryResponse getCategoryList(GetAppCategoryListRequest request) ;
 
     GetAPPSettedCategoryListResponse getSettedCategoryList(GetAppSettedCategoryListRequest request);
 

@@ -1,13 +1,11 @@
 package com.kxg.baseopen.provider.openwx.impl;
 
+import com.kxg.baseopen.provider.dto.getcanaddcategory.GetCanAddCategoryRoot;
 import com.kxg.baseopen.provider.dto.request.AddAppCategoryRequest;
 import com.kxg.baseopen.provider.dto.request.DeleteAppCategoryRequest;
 import com.kxg.baseopen.provider.dto.request.GetAppCategoryListRequest;
 import com.kxg.baseopen.provider.dto.request.GetAppSettedCategoryListRequest;
-import com.kxg.baseopen.provider.dto.response.AddAppCategoryResponse;
-import com.kxg.baseopen.provider.dto.response.DeleteAppCategoryResponse;
-import com.kxg.baseopen.provider.dto.response.GetAPPSettedCategoryListResponse;
-import com.kxg.baseopen.provider.dto.response.GetAppCategoryListResponse;
+import com.kxg.baseopen.provider.dto.response.*;
 import com.kxg.baseopen.provider.openwx.CategoryService;
 import com.kxg.baseopen.provider.openwx.TokenService;
 import com.kxg.baseopen.provider.utils.HttpClientUtil;
@@ -36,10 +34,13 @@ public class CategoryServiceImpl implements CategoryService {
      * @throws WxErrorException the wx error exception
      */
     @Override
-    public GetAppCategoryListResponse getCategoryList(GetAppCategoryListRequest request) {
+    public GetCanAddCategoryResponse getCategoryList(GetAppCategoryListRequest request) {
         String targetUrl=API_GET_CATEGORY+"?access_token="+tokenService.getSmallAppLastAccessToken(request.getAppId());
         String info = getInfo(targetUrl, null);
-        return JsonUtils.toBean(info,GetAppCategoryListResponse.class);
+        GetCanAddCategoryRoot getCanAddCategoryRoot = JsonUtils.toBean(info, GetCanAddCategoryRoot.class);
+        GetCanAddCategoryResponse response=new GetCanAddCategoryResponse();
+        response.setCanAddCategoryRoot(getCanAddCategoryRoot);
+        return response;
     }
 
     /**
