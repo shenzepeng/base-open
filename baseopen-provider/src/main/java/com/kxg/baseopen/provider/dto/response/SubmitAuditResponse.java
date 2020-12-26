@@ -7,5 +7,11 @@ import lombok.Data;
  */
 @Data
 public class SubmitAuditResponse {
+    /**
+     * "errcode": 0,
+     *   "errmsg": "ok",
+     */
+    private String errcode;
+    private String errmsg;
     private Long auditid;
 }
