@@ -17,7 +17,7 @@ public interface CategoryService {
     /**
      * 3. 获取授权小程序帐号的可选类目
      */
-    String API_GET_CATEGORY = "https://api.weixin.qq.com/wxa/get_category";
+    String API_GET_CATEGORY = "https://api.weixin.qq.com/cgi-bin/wxopen/getallcategories";
     /**
      * 获取已经设置的类目
      */

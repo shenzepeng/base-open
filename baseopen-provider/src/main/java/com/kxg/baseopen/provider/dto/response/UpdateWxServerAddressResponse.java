@@ -23,12 +23,10 @@ public class UpdateWxServerAddressResponse {
 
     private Integer errcode;
     private String errmsg;
-    @JsonProperty("requestdomain")
-    private List<String> requestDomain;
-    @JsonProperty("wsrequestdomain")
-    private List<String> wsRequestDomain;
-    @JsonProperty("uploaddomain")
-    private List<String> uploadDomain;
-    @JsonProperty("downloaddomain")
-    private List<String> downloadDomain;
+    private List<String> requestdomain;
+
+    private List<String> wsrequestdomain;
+
+    private List<String> uploaddomain;
+    private List<String> downloaddomain;
 }
