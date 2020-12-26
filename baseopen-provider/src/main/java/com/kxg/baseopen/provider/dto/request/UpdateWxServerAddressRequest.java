@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Data
 public class UpdateWxServerAddressRequest {
-    private Byte action;
+    private String  action;
     private List<String> requestDomain;
     private List<String> wsRequestDomain;
     private List<String> uploadDomain;

@@ -66,7 +66,7 @@ public class BaseInfoSettingServiceImpl implements BaseInfoSettingService {
     public UpdateWxServerAddressResponse updateWxServiceAddress(UpdateWxServerAddressRequest updateWxServerAddressRequest) {
         String targetUrl=MODIFY_DOMAIN_URL+"?access_token="+tokenService.getSmallAppLastAccessToken(updateWxServerAddressRequest.getAppId());
         Map<String,Object> map=new HashMap<>();
-        map.put("action",WxActionEnums.formatByCode(updateWxServerAddressRequest.getAction()).getAction());
+        map.put("action",updateWxServerAddressRequest.getAction());
         map.put("requestdomain",updateWxServerAddressRequest.getRequestDomain());
         map.put("wsrequestdomain",updateWxServerAddressRequest.getWsRequestDomain());
         map.put("uploaddomain",updateWxServerAddressRequest.getUploadDomain());
@@ -79,7 +79,7 @@ public class BaseInfoSettingServiceImpl implements BaseInfoSettingService {
     public SetWxUrlResponse setWebViewDomain(SetWxUrlRequest request)  {
         String targetUrl=SET_WEB_VIEW_DOMAIN_URL+"?access_token="+tokenService.getSmallAppLastAccessToken(request.getAppId());
         Map<String,Object> map=new HashMap<>();
-        map.put("action", WxActionEnums.formatByCode(request.getAction()).getName());
+        map.put("action", request.getAction());
         map.put("webviewdomain",request.getWebviewDomain());
         String postInfo = postInfo(targetUrl, map,null);
         return JsonUtils.toBean(postInfo,SetWxUrlResponse.class);

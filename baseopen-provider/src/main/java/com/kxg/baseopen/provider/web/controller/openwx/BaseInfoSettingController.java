@@ -123,7 +123,7 @@ public class BaseInfoSettingController {
      */
     @ApiOperation("解除绑定小程序体验者")
     @PostMapping("wx/search/status")
-    public SzpJsonResult<WxOpenMaSearchStatusResponse> getWxaSearchStatus(WxOpenMaSearchStatusRequest request){
+    public SzpJsonResult<WxOpenMaSearchStatusResponse> getWxaSearchStatus(@RequestBody WxOpenMaSearchStatusRequest request){
         return SzpJsonResult.ok(baseInfoSettingService.getWxaSearchStatus(request));
     }
 
