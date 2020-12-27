@@ -62,6 +62,11 @@ public interface BaseInfoSettingService {
      * 修改头像
      */
     String CHANGE_IMG_HEADER="https://api.weixin.qq.com/cgi-bin/account/modifyheadimage";
+
+    /**
+     * 修改功能介绍
+     */
+    String CHANGE_IMG_INTRODUCE="https://api.weixin.qq.com/cgi-bin/account/modifysignature";
     /**
      * 设置小程序的名称
      * @param request
@@ -143,4 +148,9 @@ public interface BaseInfoSettingService {
      *  修改头像
      */
     FixHeaderImgResponse fixHeader(FixHeaderImgRequest fixHeaderImgRequest);
+
+    /**
+     * 修改小程序的功能介绍
+     */
+    FixWxMaImgResponse fixMaIntroduce(FixWxMaImgRequest request);
 }

@@ -168,6 +168,15 @@ public class BaseInfoSettingServiceImpl implements BaseInfoSettingService {
         return JsonUtils.toBean(postInfo, FixHeaderImgResponse.class);
     }
 
+    @Override
+    public FixWxMaImgResponse fixMaIntroduce(FixWxMaImgRequest request) {
+        String targetUrl = CHANGE_IMG_INTRODUCE + "?access_token=" + tokenService.getSmallAppLastAccessToken(request.getAppId());
+        Map<String,Object> map=new HashMap<>();
+        map.put("signature",request.getSignature());
+        String postInfo = postInfo(targetUrl, map, null);
+        return JsonUtils.toBean(postInfo, FixWxMaImgResponse.class);
+    }
+
     private String getInfo(String targetUrl, Map<String, String> headerMap) {
         return HttpClientUtil.get(targetUrl, null, headerMap);
     }
