@@ -127,4 +127,11 @@ public class BaseInfoSettingController {
         return SzpJsonResult.ok(baseInfoSettingService.getWxaSearchStatus(request));
     }
 
+
+    @ApiOperation("修改头像")
+    @PostMapping("wx/fix/head")
+    public SzpJsonResult<FixHeaderImgResponse> fixImgHeader(@RequestBody FixHeaderImgRequest fixHeaderImgRequest){
+        return SzpJsonResult.ok(baseInfoSettingService.fixHeader(fixHeaderImgRequest));
+    }
+
 }

@@ -140,7 +140,7 @@ public interface BaseInfoSettingService {
     WxOpenMaSearchStatusResponse getWxaSearchStatus(WxOpenMaSearchStatusRequest request);
 
     /**
-     * TODO 修改头像
+     *  修改头像
      */
     FixHeaderImgResponse fixHeader(FixHeaderImgRequest fixHeaderImgRequest);
 }
