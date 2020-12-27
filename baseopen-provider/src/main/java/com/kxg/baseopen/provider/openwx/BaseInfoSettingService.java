@@ -67,6 +67,12 @@ public interface BaseInfoSettingService {
      * 修改功能介绍
      */
     String CHANGE_IMG_INTRODUCE="https://api.weixin.qq.com/cgi-bin/account/modifysignature";
+
+    /**
+     * 获取小程序的基本信息
+     *
+     */
+    String GET_BASE_INFO="https://api.weixin.qq.com/cgi-bin/account/getaccountbasicinfo";
     /**
      * 设置小程序的名称
      * @param request
@@ -153,4 +159,9 @@ public interface BaseInfoSettingService {
      * 修改小程序的功能介绍
      */
     FixWxMaImgResponse fixMaIntroduce(FixWxMaImgRequest request);
+
+    /**
+     * 获取小程序基本信息
+     */
+    FindWxBaseSettingResponse findWxBase(FindWxBaseSettingRequest request);
 }

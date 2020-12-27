@@ -59,6 +59,7 @@ public class TokenServiceImpl implements TokenService {
             String componentAccessToken = getComponentToken();
             log.info("componentAccessToken {}",componentAccessToken);
             addNewAccessToken(componentAccessToken);
+            return componentAccessToken;
         }
         return openWxAccessToken.getAccessToken();
     }

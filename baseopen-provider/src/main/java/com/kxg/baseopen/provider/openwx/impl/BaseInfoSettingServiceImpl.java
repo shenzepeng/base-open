@@ -1,6 +1,7 @@
 package com.kxg.baseopen.provider.openwx.impl;
 
 import com.kxg.baseopen.provider.dto.CheckWxNameDto;
+import com.kxg.baseopen.provider.dto.getMaBaseInfo.GetMaBaseInfo;
 import com.kxg.baseopen.provider.dto.request.*;
 import com.kxg.baseopen.provider.dto.response.*;
 import com.kxg.baseopen.provider.enums.WxActionEnums;
@@ -168,6 +169,11 @@ public class BaseInfoSettingServiceImpl implements BaseInfoSettingService {
         return JsonUtils.toBean(postInfo, FixHeaderImgResponse.class);
     }
 
+    /**
+     * 设置小程序简介
+     * @param request
+     * @return
+     */
     @Override
     public FixWxMaImgResponse fixMaIntroduce(FixWxMaImgRequest request) {
         String targetUrl = CHANGE_IMG_INTRODUCE + "?access_token=" + tokenService.getSmallAppLastAccessToken(request.getAppId());
@@ -175,6 +181,16 @@ public class BaseInfoSettingServiceImpl implements BaseInfoSettingService {
         map.put("signature",request.getSignature());
         String postInfo = postInfo(targetUrl, map, null);
         return JsonUtils.toBean(postInfo, FixWxMaImgResponse.class);
+    }
+
+    @Override
+    public FindWxBaseSettingResponse findWxBase(FindWxBaseSettingRequest request) {
+        String targetUrl = GET_BASE_INFO + "?access_token=" + tokenService.getSmallAppLastAccessToken(request.getAppId());
+        String getInfo=getInfo(targetUrl,null);
+        GetMaBaseInfo getMaBaseInfo = JsonUtils.toBean(getInfo, GetMaBaseInfo.class);
+        FindWxBaseSettingResponse response=new FindWxBaseSettingResponse();
+        response.setGetMaBaseInfo(getMaBaseInfo);
+        return response;
     }
 
     private String getInfo(String targetUrl, Map<String, String> headerMap) {

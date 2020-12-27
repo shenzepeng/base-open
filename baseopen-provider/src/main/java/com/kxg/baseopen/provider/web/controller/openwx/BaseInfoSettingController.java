@@ -134,4 +134,16 @@ public class BaseInfoSettingController {
         return SzpJsonResult.ok(baseInfoSettingService.fixHeader(fixHeaderImgRequest));
     }
 
+    @ApiOperation("设置小程序简介")
+    @PostMapping("wx/set/signature")
+    public SzpJsonResult<FixWxMaImgResponse> fixMaIntroduce(@RequestBody FixWxMaImgRequest request){
+        return SzpJsonResult.ok(baseInfoSettingService.fixMaIntroduce(request));
+    }
+
+    @ApiOperation("获取小程序的基本信息")
+    @PostMapping("wx/base/setting")
+    public SzpJsonResult<FindWxBaseSettingResponse> findWxBase(@RequestBody FindWxBaseSettingRequest request){
+        return SzpJsonResult.ok(baseInfoSettingService.findWxBase(request));
+    }
+
 }

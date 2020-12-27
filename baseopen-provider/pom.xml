@@ -19,6 +19,12 @@
     </properties>
 
     <dependencies>
+        <!-- 引入org.json所需依赖 -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160810</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/cn.springboot/best-pay-sdk -->
         <dependency>
             <groupId>cn.springboot</groupId>
