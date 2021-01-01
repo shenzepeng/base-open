@@ -68,4 +68,10 @@ public interface WxPayService {
      * @return 二维码中的内容为链接
      */
     String getQrCodeUrl(String productId);
+
+    /**
+     * 获取openId
+     * @return
+     */
+    String getOrderId();
 }

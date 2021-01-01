@@ -2,6 +2,9 @@ package com.test.open;
 
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 
+import com.kxg.baseopen.provider.pay.WxPayService;
+import com.kxg.baseopen.provider.utils.DownLoadFileUtils;
+import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,4 +35,21 @@ public class GetProCodeTest {
 
         System.out.println(sb.toString());
     }
+
+    @Autowired
+    private WxPayService wxPayService;
+    @Test
+    public void test1(){
+        String orderId = wxPayService.getOrderId();
+        System.out.println(orderId);
+    }
+    private static final String P12_URL="https://kxg-neituibao-jianli.oss-cn-beijing.aliyuncs.com/sss/1609336977085.p12";
+    private static final String P12_PATH="/p12";
+    private static final String P12_FILE_PATH="A_B_C_D_E.p12";
+//    @SneakyThrows
+//    @Test
+//    public void test2(){
+//        DownLoadFileUtils.downLoadFromUrl(P12_URL,P12_PATH,P12_FILE_PATH);
+//        System.out.println(P12_PATH+"/"+P12_FILE_PATH);
+//    }
 }
