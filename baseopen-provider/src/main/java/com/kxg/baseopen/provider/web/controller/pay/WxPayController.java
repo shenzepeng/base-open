@@ -42,8 +42,8 @@ public class WxPayController {
 
     @Autowired
     private WxPayService wxPayService;
-
-    private BestPayService bestPayService=new BestPayServiceImpl();
+    @Autowired
+    private BestPayService bestPayService;
     /**
      * 发起支付
      */
@@ -51,7 +51,7 @@ public class WxPayController {
     @ResponseBody
     public PayResponse pay(@RequestParam(defaultValue = "APP") String payType,
                            @RequestParam Double money) {
-        BestPayTypeEnum bestPayTypeEnum = BestPayTypeEnum.getByName(payType);
+        BestPayTypeEnum bestPayTypeEnum = BestPayTypeEnum.WXPAY_APP;
         //支付请求参数
         PayRequest request = new PayRequest();
         request.setPayTypeEnum(bestPayTypeEnum);
