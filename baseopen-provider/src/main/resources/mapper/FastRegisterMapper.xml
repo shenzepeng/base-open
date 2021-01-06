@@ -17,5 +17,7 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="err_code" jdbcType="VARCHAR" property="errCode" />
     <result column="error_msg" jdbcType="VARCHAR" property="errorMsg" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
   </resultMap>
 </mapper>

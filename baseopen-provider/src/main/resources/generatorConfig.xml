@@ -77,9 +77,9 @@
 <!--        <table tableName="t_component_verify_ticket" domainObjectName="ComponentVerifyTicket">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="t_order_id" domainObjectName="OrderId">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="t_notify" domainObjectName="PayNotify">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
 <!--        <table tableName="t_app_id_fun" domainObjectName="AppIdFun">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
@@ -89,5 +89,51 @@
 <!--        <table tableName="t_call_back_code" domainObjectName="CallBackCode">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
+        <table tableName="t_app_qrcode" domainObjectName="AppQrcode">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_app_template" domainObjectName="CodeTemplate">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_business_introduce" domainObjectName="BusinessIntroduce">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_certification_process" domainObjectName="CertificationProcess">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_fast_register" domainObjectName="FastRegister">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_goods_info" domainObjectName="GoodsInfo">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_mother_ship" domainObjectName="MotherShip">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_programme" domainObjectName="Programme">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_programme_template" domainObjectName="ProgrammeTemplate">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_sms_info" domainObjectName="SmsInfo">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_son_user_ship" domainObjectName="SonUserShip">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_user_apply" domainObjectName="UserApply">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_user_goods_type" domainObjectName="UserGoodsType">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_user_look_record" domainObjectName="UserLookRecord">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="t_wechat_template" domainObjectName="WechatTemplate">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+
     </context>
 </generatorConfiguration>

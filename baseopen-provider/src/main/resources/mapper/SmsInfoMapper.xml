@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kxg.baseopen.provider.mapper.SmsInfoMapper">
+  <resultMap id="BaseResultMap" type="com.kxg.baseopen.provider.pojo.SmsInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="vetify_times" jdbcType="INTEGER" property="vetifyTimes" />
+    <result column="flow_msg" jdbcType="VARCHAR" property="flowMsg" />
+    <result column="flow_id" jdbcType="VARCHAR" property="flowId" />
+    <result column="flow_code" jdbcType="VARCHAR" property="flowCode" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

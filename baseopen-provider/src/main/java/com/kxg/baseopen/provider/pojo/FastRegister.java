@@ -15,7 +15,7 @@ public class FastRegister {
     private String name;
 
     /**
-     * 组织编码 
+     * 组织编码
 
      */
     private String code;
@@ -62,6 +62,15 @@ public class FastRegister {
     private String errorMsg;
 
     /**
+     * 营业执照url
+     */
+    @Column(name = "img_url")
+    private String imgUrl;
+
+    @Column(name = "user_id")
+    private Long userId;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -94,10 +103,10 @@ public class FastRegister {
     }
 
     /**
-     * 获取组织编码 
+     * 获取组织编码
 
      *
-     * @return code - 组织编码 
+     * @return code - 组织编码
 
      */
     public String getCode() {
@@ -105,10 +114,10 @@ public class FastRegister {
     }
 
     /**
-     * 设置组织编码 
+     * 设置组织编码
 
      *
-     * @param code 组织编码 
+     * @param code 组织编码
 
      */
     public void setCode(String code) {
@@ -259,5 +268,37 @@ public class FastRegister {
      */
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg == null ? null : errorMsg.trim();
+    }
+
+    /**
+     * 获取营业执照url
+     *
+     * @return img_url - 营业执照url
+     */
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    /**
+     * 设置营业执照url
+     *
+     * @param imgUrl 营业执照url
+     */
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl == null ? null : imgUrl.trim();
+    }
+
+    /**
+     * @return user_id
+     */
+    public Long getUserId() {
+        return userId;
+    }
+
+    /**
+     * @param userId
+     */
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

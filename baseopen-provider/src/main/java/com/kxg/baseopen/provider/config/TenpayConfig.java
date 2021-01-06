@@ -21,4 +21,6 @@ public class TenpayConfig {
     public static String QUERY_URL="https://api.mch.weixin.qq.com/pay/orderquery";
     //Sign=WXPay
     public static String PACKAGE_VALUE="Sign=WXPay";
+    //微信支付回调
+    public static String WX_PAY_NOTIFY_URL="http://www.shenzepengzuishuai.cn/baseopen-provider-1.0.0/notify";
 }

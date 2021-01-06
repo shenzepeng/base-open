@@ -3,14 +3,15 @@ package com.kxg.baseopen.provider.web.controller.pay;
 import com.google.gson.Gson;
 import com.kxg.baseopen.provider.config.WechatAccountConfig;
 import com.kxg.baseopen.provider.dao.OrderDao;
+import com.kxg.baseopen.provider.mapper.PayNotifyMapper;
 import com.kxg.baseopen.provider.pay.WxPayService;
 import com.kxg.baseopen.provider.pojo.OrderInfo;
+import com.kxg.baseopen.provider.pojo.PayNotify;
+import com.kxg.baseopen.provider.utils.JsonUtils;
 import com.lly835.bestpay.enums.BestPayPlatformEnum;
 import com.lly835.bestpay.enums.BestPayTypeEnum;
 import com.lly835.bestpay.model.*;
 import com.lly835.bestpay.service.BestPayService;
-import com.lly835.bestpay.service.impl.BestPayServiceImpl;
-import com.lly835.bestpay.service.impl.BestPayServiceImpl;
 import com.lly835.bestpay.utils.JsonUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +37,6 @@ import java.util.UUID;
 @RestController
 public class WxPayController {
 
-    private WechatAccountConfig wechatAccountConfig;
     @Autowired
     private OrderDao orderDao;
 
@@ -49,8 +49,7 @@ public class WxPayController {
      */
     @PostMapping(value = "/pay")
     @ResponseBody
-    public PayResponse pay(@RequestParam(defaultValue = "APP") String payType,
-                           @RequestParam Double money) {
+    public PayResponse pay(@RequestParam Double money) {
         BestPayTypeEnum bestPayTypeEnum = BestPayTypeEnum.WXPAY_APP;
         //支付请求参数
         PayRequest request = new PayRequest();
@@ -68,102 +67,27 @@ public class WxPayController {
         orderDao.add(orderInfo);
         PayResponse payResponse = bestPayService.pay(request);
         log.info("【发起支付】response={}", JsonUtil.toJson(payResponse));
+        payResponse.setOrderId(orderId);
         return payResponse;
     }
 
-    /**
-     * 微信h5支付，要求referer是白名单的地址，这里做个重定向
-     * @param prepayId
-     * @param packAge
-     * @return
-     */
-    @GetMapping("/wxpay_mweb_redirect")
-    public ModelAndView wxpayMweb(@RequestParam("prepay_id") String prepayId,
-                                  @RequestParam("package") String packAge,
-                                  Map map) {
-        String url = String.format("https://wx.tenpay.com/cgi-bin/mmpayweb-bin/checkmweb?prepay_id=%s&package=%s", prepayId, packAge);
-        map.put("url", url);
-        return new ModelAndView("pay/wxpayMwebRedirect");
-    }
 
-    @GetMapping("/query")
-    @ResponseBody
-    public OrderQueryResponse query(@RequestParam String orderId,
-                                    @RequestParam("platform") BestPayPlatformEnum platformEnum) {
-        OrderQueryRequest orderQueryRequest = new OrderQueryRequest();
-        orderQueryRequest.setOrderId(orderId);
-        orderQueryRequest.setPlatformEnum(platformEnum);
-        OrderQueryResponse queryResponse = bestPayService.query(orderQueryRequest);
-        return queryResponse;
-    }
-
-    @GetMapping("/refund")
-    @ResponseBody
-    public RefundResponse refund(@RequestParam String orderId) {
-        RefundRequest request = new RefundRequest();
-        request.setOrderId(orderId);
-        request.setPayPlatformEnum(BestPayPlatformEnum.WX);
-        request.setOrderAmount(0.1);
-        RefundResponse response = bestPayService.refund(request);
-        return response;
-    }
-
-    /**
-     * 小程序支付
-     * @param code
-     * @return
-     */
-    @GetMapping(value = "/mini_pay")
-    @ResponseBody
-    public PayResponse minipay(@RequestParam(value = "code") String code){
-
-        String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+WechatAccountConfig.appAppId+"&secret="+WechatAccountConfig.miniAppSecret+"&js_code="+code+"&grant_type=authorization_code";
-        RestTemplate restTemplate = new RestTemplate();
-        String userInfo = restTemplate.getForObject(url, String.class);
-
-        Random random = new Random();
-        DateTime dateTime = new DateTime(new Date());
-        PayRequest payRequest = new PayRequest();
-        payRequest.setOpenid(((String) new Gson().fromJson(userInfo, Map.class).get("openid")));
-        payRequest.setOrderAmount(0.01);
-        payRequest.setOrderId(System.currentTimeMillis() + String.valueOf(random.nextInt(900000) + 100000)+dateTime.toString("yyyymmdd")+String.valueOf(random.nextInt(90000) + 10000));
-        payRequest.setOrderName("小程序支付");
-        payRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_MINI);
-        log.info("【发起支付】request={}", JsonUtil.toJson(payRequest));
-        PayResponse payResponse = bestPayService.pay(payRequest);
-        log.info("【发起支付】response={}", JsonUtil.toJson(payResponse));
-        return payResponse;
-    }
-
-    /**
-     * 发起支付
-     */
-    @GetMapping(value = "/alipay/pay")
-    public ModelAndView aliPay(Map<String, Object> map) {
-        PayRequest request = new PayRequest();
-        Random random = new Random();
-        //支付请求参数
-        request.setPayTypeEnum(BestPayTypeEnum.ALIPAY_PC);
-        request.setOrderId(String.valueOf(random.nextInt(1000000000)));
-        request.setOrderAmount(0.01);
-        request.setOrderName("最好的支付sdk");
-        log.info("【发起支付】request={}", JsonUtil.toJson(request));
-        PayResponse payResponse = bestPayService.pay(request);
-        log.info("【发起支付】response={}", JsonUtil.toJson(payResponse));
-        map.put("payResponse", payResponse);
-
-        return new ModelAndView("pay/alipayPc", map);
-    }
-
+    @Autowired
+    private PayNotifyMapper payNotifyMapper;
     /**
      * 异步回调
      */
     @PostMapping(value = "/notify")
     public ModelAndView notify(@RequestBody String notifyData) {
         log.info("【异步通知】支付平台的数据request={}", notifyData);
+        PayNotify payNotify1=new PayNotify();
+        payNotify1.setContent(notifyData);
+        payNotifyMapper.insertSelective(payNotify1);
         PayResponse response = bestPayService.asyncNotify(notifyData);
         log.info("【异步通知】处理后的数据data={}", JsonUtil.toJson(response));
-
+        PayNotify payNotify=new PayNotify();
+        payNotify.setContent(JsonUtils.convertObjectToJSON(response));
+        payNotifyMapper.insertSelective(payNotify);
         //返回成功信息给支付平台，否则会不停的异步通知
         if (response.getPayPlatformEnum() == BestPayPlatformEnum.WX) {
             return new ModelAndView("pay/responeSuccessForWx");
@@ -173,19 +97,104 @@ public class WxPayController {
         throw new RuntimeException("错误的支付平台");
     }
 
-    @GetMapping("/pay/close")
-    @ResponseBody
-    public CloseResponse close(@RequestParam String orderId) {
-        CloseRequest request = new CloseRequest();
-        request.setPayTypeEnum(BestPayTypeEnum.ALIPAY_PC);
-        request.setOrderId(orderId);
-        CloseResponse close = bestPayService.close(request);
-        return close;
-    }
-    @ApiOperation("获取orderId")
-    @GetMapping("get/order/id")
-    @ResponseBody
-    public String getOrderId(){
-        return wxPayService.getOrderId();
-    }
+//    /**
+//     * 微信h5支付，要求referer是白名单的地址，这里做个重定向
+//     * @param prepayId
+//     * @param packAge
+//     * @return
+//     */
+//    @GetMapping("/wxpay_mweb_redirect")
+//    public ModelAndView wxpayMweb(@RequestParam("prepay_id") String prepayId,
+//                                  @RequestParam("package") String packAge,
+//                                  Map map) {
+//        String url = String.format("https://wx.tenpay.com/cgi-bin/mmpayweb-bin/checkmweb?prepay_id=%s&package=%s", prepayId, packAge);
+//        map.put("url", url);
+//        return new ModelAndView("pay/wxpayMwebRedirect");
+//    }
+//
+//    @GetMapping("/query")
+//    @ResponseBody
+//    public OrderQueryResponse query(@RequestParam String orderId,
+//                                    @RequestParam("platform") BestPayPlatformEnum platformEnum) {
+//        OrderQueryRequest orderQueryRequest = new OrderQueryRequest();
+//        orderQueryRequest.setOrderId(orderId);
+//        orderQueryRequest.setPlatformEnum(platformEnum);
+//        OrderQueryResponse queryResponse = bestPayService.query(orderQueryRequest);
+//        return queryResponse;
+//    }
+//
+//    @GetMapping("/refund")
+//    @ResponseBody
+//    public RefundResponse refund(@RequestParam String orderId) {
+//        RefundRequest request = new RefundRequest();
+//        request.setOrderId(orderId);
+//        request.setPayPlatformEnum(BestPayPlatformEnum.WX);
+//        request.setOrderAmount(0.1);
+//        RefundResponse response = bestPayService.refund(request);
+//        return response;
+//    }
+//
+//    /**
+//     * 小程序支付
+//     * @param code
+//     * @return
+//     */
+//    @GetMapping(value = "/mini_pay")
+//    @ResponseBody
+//    public PayResponse minipay(@RequestParam(value = "code") String code){
+//
+//        String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+WechatAccountConfig.appAppId+"&secret="+WechatAccountConfig.miniAppSecret+"&js_code="+code+"&grant_type=authorization_code";
+//        RestTemplate restTemplate = new RestTemplate();
+//        String userInfo = restTemplate.getForObject(url, String.class);
+//
+//        Random random = new Random();
+//        DateTime dateTime = new DateTime(new Date());
+//        PayRequest payRequest = new PayRequest();
+//        payRequest.setOpenid(((String) new Gson().fromJson(userInfo, Map.class).get("openid")));
+//        payRequest.setOrderAmount(0.01);
+//        payRequest.setOrderId(System.currentTimeMillis() + String.valueOf(random.nextInt(900000) + 100000)+dateTime.toString("yyyymmdd")+String.valueOf(random.nextInt(90000) + 10000));
+//        payRequest.setOrderName("小程序支付");
+//        payRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_MINI);
+//        log.info("【发起支付】request={}", JsonUtil.toJson(payRequest));
+//        PayResponse payResponse = bestPayService.pay(payRequest);
+//        log.info("【发起支付】response={}", JsonUtil.toJson(payResponse));
+//        return payResponse;
+//    }
+//
+//    /**
+//     * 发起支付
+//     */
+//    @GetMapping(value = "/alipay/pay")
+//    public ModelAndView aliPay(Map<String, Object> map) {
+//        PayRequest request = new PayRequest();
+//        Random random = new Random();
+//        //支付请求参数
+//        request.setPayTypeEnum(BestPayTypeEnum.ALIPAY_PC);
+//        request.setOrderId(String.valueOf(random.nextInt(1000000000)));
+//        request.setOrderAmount(0.01);
+//        request.setOrderName("最好的支付sdk");
+//        log.info("【发起支付】request={}", JsonUtil.toJson(request));
+//        PayResponse payResponse = bestPayService.pay(request);
+//        log.info("【发起支付】response={}", JsonUtil.toJson(payResponse));
+//        map.put("payResponse", payResponse);
+//
+//        return new ModelAndView("pay/alipayPc", map);
+//    }
+//
+//
+//    @GetMapping("/pay/close")
+//    @ResponseBody
+//    public CloseResponse close(@RequestParam String orderId) {
+//        CloseRequest request = new CloseRequest();
+//        request.setPayTypeEnum(BestPayTypeEnum.ALIPAY_PC);
+//        request.setOrderId(orderId);
+//        CloseResponse close = bestPayService.close(request);
+//        return close;
+//    }
+//    @ApiOperation("获取orderId")
+//    @GetMapping("get/order/id")
+//    @ResponseBody
+//    public String getOrderId(){
+//        return wxPayService.getOrderId();
+//    }
 }

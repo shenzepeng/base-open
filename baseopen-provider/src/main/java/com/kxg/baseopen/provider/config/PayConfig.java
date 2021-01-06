@@ -36,6 +36,7 @@ public class PayConfig {
         wxPayConfig.setMchId(TenpayConfig.MCH_ID);
         wxPayConfig.setMchKey(TenpayConfig.MCH_KEY);
         wxPayConfig.setAppAppId(TenpayConfig.APP_ID);
+        wxPayConfig.setNotifyUrl(TenpayConfig.WX_PAY_NOTIFY_URL);
         wxPayConfig.setKeyPath(P12_PATH+"/"+P12_FILE_NAME);
         wxPayConfig.setNotifyUrl("accountConfig.getNotifyUrl()");
         return wxPayConfig;
