@@ -4,6 +4,7 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.kxg.baseopen.provider.common.KxgResponse;
 import com.kxg.baseopen.provider.common.ReturnCode;
+import com.kxg.baseopen.provider.config.SzpJsonResult;
 import com.kxg.baseopen.provider.dao.SmsDao;
 import com.kxg.baseopen.provider.exception.KxgException;
 import com.kxg.baseopen.provider.pojo.SmsInfo;
@@ -41,7 +42,7 @@ public class SmsServiceImpl implements SmsService {
     private SmsDao smsDao;
 
     @Override
-    public KxgResponse<IntegerResult> sent(SentSmsRequest sentSmsRequest){
+    public SzpJsonResult<IntegerResult> sent(SentSmsRequest sentSmsRequest){
         try {
             Integer newCode = (int)(Math.random()*9999)+100;
             SmsInfo kSmsInfo=new SmsInfo();
@@ -57,11 +58,11 @@ public class SmsServiceImpl implements SmsService {
             log.error("sent sms error {}",e.toString());
         }
         IntegerResult integerResult=new IntegerResult();
-        return KxgResponse.create(ReturnCode.SUCCESS,integerResult);
+        return SzpJsonResult.ok(integerResult);
     }
 
     @Override
-    public KxgResponse<IntegerResult> verify(VerifyRequest request){
+    public SzpJsonResult<IntegerResult> verify(VerifyRequest request){
         List<SmsInfo> smsInfo = smsDao.findSmsInfo(request.getPhoneNumber());
         //没有收到验证码
         if (CollectionUtils.isEmpty(smsInfo)){
@@ -79,7 +80,7 @@ public class SmsServiceImpl implements SmsService {
             throw new KxgException("99999","验证码不正确");
         }
         IntegerResult integerResult=new IntegerResult();
-        return KxgResponse.create(ReturnCode.SUCCESS,integerResult);
+        return SzpJsonResult.ok(integerResult);
     }
 
     private   SendSmsResponse sendSms(String telephone, String code) throws ClientException {

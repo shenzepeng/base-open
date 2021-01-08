@@ -29,7 +29,7 @@ public class BusinessIntroduce {
      * 商家照片
      */
     @Column(name = "img_url")
-    private byte[] imgUrl;
+    private String imgUrl;
 
     /**
      * @return id
@@ -109,21 +109,13 @@ public class BusinessIntroduce {
         this.updateTime = updateTime;
     }
 
-    /**
-     * 获取商家照片
-     *
-     * @return img_url - 商家照片
-     */
-    public byte[] getImgUrl() {
+//    ￿￿
+
+    public String getImgUrl() {
         return imgUrl;
     }
 
-    /**
-     * 设置商家照片
-     *
-     * @param imgUrl 商家照片
-     */
-    public void setImgUrl(byte[] imgUrl) {
+    public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
 }

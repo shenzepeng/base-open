@@ -10,6 +10,6 @@
     <result column="introduce" jdbcType="VARCHAR" property="introduce" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="img_url" jdbcType="VARBINARY" property="imgUrl" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
   </resultMap>
 </mapper>

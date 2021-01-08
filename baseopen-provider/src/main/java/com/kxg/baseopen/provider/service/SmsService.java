@@ -10,6 +10,7 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.kxg.baseopen.provider.common.KxgResponse;
 import com.kxg.baseopen.provider.common.ReturnCode;
+import com.kxg.baseopen.provider.config.SzpJsonResult;
 import com.kxg.baseopen.provider.exception.KxgException;
 import com.kxg.baseopen.provider.pojo.SmsInfo;
 import com.kxg.baseopen.provider.utils.JsonUtils;
@@ -24,9 +25,9 @@ import java.util.List;
  * 要写注释呀
  */
 public interface SmsService {
-    KxgResponse<IntegerResult> sent(SentSmsRequest sentSmsRequest) ;
+    SzpJsonResult<IntegerResult> sent(SentSmsRequest sentSmsRequest) ;
 
-    KxgResponse<IntegerResult> verify(VerifyRequest request);
+    SzpJsonResult<IntegerResult> verify(VerifyRequest request);
 
 
 }
