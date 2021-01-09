@@ -33,4 +33,13 @@ public class GoodsDao {
     public int addGoods(GoodsInfo goodsInfo){
         return goodsInfoMapper.insertSelective(goodsInfo);
     }
+
+    public int updateGoods(GoodsInfo goodsInfo){
+        return goodsInfoMapper.updateByPrimaryKeySelective(goodsInfo);
+    }
+
+    public int deleteGoods(Long userId){
+        return goodsInfoMapper.deleteByPrimaryKey(userId);
+    }
 }
+

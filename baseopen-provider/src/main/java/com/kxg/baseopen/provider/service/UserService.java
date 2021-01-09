@@ -2,6 +2,7 @@ package com.kxg.baseopen.provider.service;
 
 import com.kxg.baseopen.provider.web.request.FindUserPhoneAndOpenIdRequest;
 import com.kxg.baseopen.provider.web.response.FindUserPhoneAndOpenIdResponse;
+import com.kxg.baseopen.provider.web.response.SmsLoginResponse;
 
 /**
  * 要写注释呀
@@ -16,4 +17,6 @@ public interface UserService {
 
 
     FindUserPhoneAndOpenIdResponse findUserInfo(FindUserPhoneAndOpenIdRequest request);
+
+    SmsLoginResponse login(String phoneNumber);
 }

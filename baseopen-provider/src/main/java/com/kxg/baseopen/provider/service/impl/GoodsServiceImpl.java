@@ -7,7 +7,9 @@ import com.kxg.baseopen.provider.pojo.GoodsInfo;
 import com.kxg.baseopen.provider.service.GoodsService;
 import com.kxg.baseopen.provider.utils.JsonUtils;
 import com.kxg.baseopen.provider.web.request.AddGoodsRequest;
+import com.kxg.baseopen.provider.web.request.DeleteGoodsRequest;
 import com.kxg.baseopen.provider.web.request.FindGoodsRequest;
+import com.kxg.baseopen.provider.web.request.UpdateGoodsRequest;
 import com.kxg.baseopen.provider.web.response.FindGoodsResponse;
 import com.kxg.baseopen.provider.web.response.IntegerResult;
 import org.apache.commons.lang3.StringUtils;
@@ -67,5 +69,25 @@ public class GoodsServiceImpl implements GoodsService {
         FindGoodsResponse response=new FindGoodsResponse();
         response.setGoodsDtos(goodsDtos);
         return response;
+    }
+
+    @Override
+    public IntegerResult updateGoods(UpdateGoodsRequest request) {
+        GoodsInfo goodsInfo=new GoodsInfo();
+        BeanUtils.copyProperties(request,goodsInfo);
+        if (!CollectionUtils.isEmpty(request.getImgList())){
+            goodsInfo.setImgList(JsonUtils.convertObjectToJSON(request.getImgList()));
+        }
+        goodsDao.updateGoods(goodsInfo);
+        return new IntegerResult();
+    }
+
+    @Override
+    public IntegerResult deleteGoodsById(DeleteGoodsRequest request) {
+        if (null==request.getId()){
+            throw new KxgException("99999","userId不能为空");
+        }
+        goodsDao.deleteGoods(request.getId());
+        return new IntegerResult();
     }
 }

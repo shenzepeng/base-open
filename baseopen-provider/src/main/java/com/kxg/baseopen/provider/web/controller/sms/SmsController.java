@@ -1,7 +1,6 @@
 package com.kxg.baseopen.provider.web.controller.sms;
 
 
-import com.kxg.baseopen.provider.common.KxgResponse;
 import com.kxg.baseopen.provider.config.SzpJsonResult;
 import com.kxg.baseopen.provider.exception.KxgException;
 import com.kxg.baseopen.provider.service.SmsService;
@@ -9,8 +8,8 @@ import com.kxg.baseopen.provider.service.UserService;
 import com.kxg.baseopen.provider.web.request.SentSmsRequest;
 import com.kxg.baseopen.provider.web.request.VerifyRequest;
 import com.kxg.baseopen.provider.web.response.IntegerResult;
+import com.kxg.baseopen.provider.web.response.SmsLoginResponse;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,5 +55,18 @@ public class SmsController {
         //看是否有这个人，没有的话，添加新的
         userService.findUserInfo(request.getPhoneNumber());
         return verify;
+    }
+
+    @ApiOperation("验证码登录")
+    @PostMapping("smsLogin")
+    public SzpJsonResult<SmsLoginResponse> smsLogin(@RequestBody VerifyRequest request){
+        if (StringUtils.isEmpty(request.getPhoneNumber())){
+            throw new KxgException("99999","手机号不能为空");
+        }
+        if (StringUtils.isEmpty(request.getCode())){
+            throw new KxgException("99999","验证码不能为空");
+        }
+        //看是否有这个人，没有的话，添加新的
+        return SzpJsonResult.ok(userService.login(request.getPhoneNumber()));
     }
 }

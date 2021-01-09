@@ -7,6 +7,7 @@ import com.kxg.baseopen.provider.pojo.UserInfo;
 import com.kxg.baseopen.provider.service.UserService;
 import com.kxg.baseopen.provider.web.request.FindUserPhoneAndOpenIdRequest;
 import com.kxg.baseopen.provider.web.response.FindUserPhoneAndOpenIdResponse;
+import com.kxg.baseopen.provider.web.response.SmsLoginResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -47,6 +48,24 @@ public class UserServiceImpl implements UserService {
         }
         FindUserPhoneAndOpenIdResponse response=new FindUserPhoneAndOpenIdResponse();
         BeanUtils.copyProperties(userInfo.get(0),response);
+        response.setUserId(userInfo.get(0).getId());
+        return response;
+    }
+
+    @Override
+    public SmsLoginResponse login(String phoneNumber) {
+        //防止没有这个人
+        findUserInfo(phoneNumber);
+        List<UserInfo> userInfo = userDao.findUserInfo(phoneNumber);
+        UserInfo info = userInfo.get(0);
+        SmsLoginResponse response=new SmsLoginResponse();
+        response.setAppId(info.getAppId());
+        response.setOpenId(info.getOpenId());
+        response.setStatus(info.getStatus());
+        response.setUserId(info.getId());
+        if (!StringUtils.isEmpty(info.getAppId())){
+            response.setHadCreateApp(Boolean.TRUE);
+        }
         return response;
     }
 }
