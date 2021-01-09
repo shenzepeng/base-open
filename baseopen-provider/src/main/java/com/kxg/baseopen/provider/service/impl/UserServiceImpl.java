@@ -5,8 +5,11 @@ import com.kxg.baseopen.provider.exception.KxgException;
 import com.kxg.baseopen.provider.mapper.UserInfoMapper;
 import com.kxg.baseopen.provider.pojo.UserInfo;
 import com.kxg.baseopen.provider.service.UserService;
+import com.kxg.baseopen.provider.web.request.AddUserInfoRequest;
 import com.kxg.baseopen.provider.web.request.FindUserPhoneAndOpenIdRequest;
+import com.kxg.baseopen.provider.web.request.UpdateUserInfoRequest;
 import com.kxg.baseopen.provider.web.response.FindUserPhoneAndOpenIdResponse;
+import com.kxg.baseopen.provider.web.response.IntegerResult;
 import com.kxg.baseopen.provider.web.response.SmsLoginResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,8 @@ public class UserServiceImpl implements UserService {
         }
         UserInfo userInfo=new UserInfo();
         userInfo.setPhoneNumber(phoneNumber);
+        //设置为代理
+        userInfo.setStatus(2);
         userDao.addUserInfo(userInfo);
     }
 
@@ -67,5 +72,36 @@ public class UserServiceImpl implements UserService {
             response.setHadCreateApp(Boolean.TRUE);
         }
         return response;
+    }
+
+    @Override
+    public IntegerResult updateUserInfo(UpdateUserInfoRequest request) {
+        if (StringUtils.isEmpty(request.getAppId())||StringUtils.isEmpty(request.getOpenId())){
+            throw new KxgException("99999","请检查入参");
+        }
+        List<UserInfo> userInfo = userDao.findUserInfo(request.getAppId(), request.getOpenId());
+        if (CollectionUtils.isEmpty(userInfo)){
+            throw new KxgException("99999","当前用户不存在");
+        }
+        UserInfo info = userInfo.get(0);
+        info.setPhoneNumber(request.getPhoneNumber());
+        info.setNickName(request.getNickName());
+        info.setImgUrl(request.getImgUrl());
+        info.setInfoMsg(request.getInfoMsg());
+        userDao.updateUserInfo(info);
+        return new IntegerResult();
+    }
+
+    @Override
+    public IntegerResult addUserInfo(AddUserInfoRequest request) {
+        List<UserInfo> userInfo = userDao.findUserInfo(request.getAppId(), request.getOpenId());
+        if (!CollectionUtils.isEmpty(userInfo)){
+            return new IntegerResult();
+        }
+        UserInfo info=new UserInfo();
+        info.setAppId(request.getAppId());
+        info.setOpenId(request.getOpenId());
+        userDao.addUserInfo(info);
+        return new IntegerResult();
     }
 }

@@ -1,7 +1,10 @@
 package com.kxg.baseopen.provider.service;
 
+import com.kxg.baseopen.provider.web.request.AddUserInfoRequest;
 import com.kxg.baseopen.provider.web.request.FindUserPhoneAndOpenIdRequest;
+import com.kxg.baseopen.provider.web.request.UpdateUserInfoRequest;
 import com.kxg.baseopen.provider.web.response.FindUserPhoneAndOpenIdResponse;
+import com.kxg.baseopen.provider.web.response.IntegerResult;
 import com.kxg.baseopen.provider.web.response.SmsLoginResponse;
 
 /**
@@ -19,4 +22,8 @@ public interface UserService {
     FindUserPhoneAndOpenIdResponse findUserInfo(FindUserPhoneAndOpenIdRequest request);
 
     SmsLoginResponse login(String phoneNumber);
+
+    IntegerResult updateUserInfo(UpdateUserInfoRequest request);
+
+    IntegerResult addUserInfo(AddUserInfoRequest addUserInfoRequest);
 }

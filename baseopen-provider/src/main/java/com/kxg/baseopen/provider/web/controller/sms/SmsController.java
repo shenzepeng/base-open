@@ -51,10 +51,7 @@ public class SmsController {
         if (StringUtils.isEmpty(request.getCode())){
             throw new KxgException("99999","验证码不能为空");
         }
-        SzpJsonResult<IntegerResult> verify = smsService.verify(request);
-        //看是否有这个人，没有的话，添加新的
-        userService.findUserInfo(request.getPhoneNumber());
-        return verify;
+        return smsService.verify(request);
     }
 
     @ApiOperation("验证码登录")

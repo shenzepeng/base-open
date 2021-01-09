@@ -40,4 +40,16 @@ public class UserDao {
         }
         return userInfoMapper.selectByExample(example);
     }
+
+    public Integer updateUserInfo(UserInfo userInfo){
+        return userInfoMapper.updateByPrimaryKeySelective(userInfo);
+    }
+
+    public List<UserInfo> findUserInfo(String appId,String openId){
+        Example example=new Example(UserInfo.class);
+        example.createCriteria()
+                .andEqualTo("appId",appId)
+                .andEqualTo("openId",openId);
+        return userInfoMapper.selectByExample(example);
+    }
 }
