@@ -9,4 +9,5 @@ import lombok.Data;
 public class AllNeedHandlerDto {
     private Long userId;
     private String phoneNumber;
+    private Integer status;
 }

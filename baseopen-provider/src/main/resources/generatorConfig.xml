@@ -89,9 +89,9 @@
 <!--        <table tableName="t_call_back_code" domainObjectName="CallBackCode">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="t_user" domainObjectName="UserInfo">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="t_user" domainObjectName="UserInfo">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
 <!--        <table tableName="t_app_template" domainObjectName="CodeTemplate">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
@@ -135,8 +135,12 @@
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
 
-                <table tableName="t_wx_fast_register" domainObjectName="WxFastRegister">
-                    <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-                </table>
+<!--                <table tableName="t_wx_fast_register" domainObjectName="WxFastRegister">-->
+<!--                    <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--                </table>-->
+
+        <table tableName="t_need_handler" domainObjectName="NeedHandler">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
     </context>
 </generatorConfiguration>
