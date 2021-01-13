@@ -17,7 +17,7 @@ public class ManagerController {
     @Autowired
     private ManagerService managerService;
     @ApiOperation("待处理列表")
-    @PostMapping
+    @PostMapping("wait/handler")
     public SzpJsonResult<?> getNeedList(){
         return SzpJsonResult.ok();
     }
