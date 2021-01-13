@@ -1,6 +1,7 @@
 package com.kxg.baseopen.provider.web.controller.pay;
 
 import com.google.gson.Gson;
+import com.kxg.baseopen.provider.config.SzpJsonResult;
 import com.kxg.baseopen.provider.config.WechatAccountConfig;
 import com.kxg.baseopen.provider.dao.OrderDao;
 import com.kxg.baseopen.provider.mapper.PayNotifyMapper;
@@ -8,6 +9,7 @@ import com.kxg.baseopen.provider.pay.WxPayService;
 import com.kxg.baseopen.provider.pojo.OrderInfo;
 import com.kxg.baseopen.provider.pojo.PayNotify;
 import com.kxg.baseopen.provider.utils.JsonUtils;
+import com.kxg.baseopen.provider.web.request.AddPayEndAndMoneyRequest;
 import com.lly835.bestpay.enums.BestPayPlatformEnum;
 import com.lly835.bestpay.enums.BestPayTypeEnum;
 import com.lly835.bestpay.model.*;
@@ -19,6 +21,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,11 +38,11 @@ import java.util.UUID;
 @Api("支付")
 @Slf4j
 @RestController
+@RequestMapping("wx")
 public class WxPayController {
 
     @Autowired
     private OrderDao orderDao;
-
     @Autowired
     private WxPayService wxPayService;
     @Autowired
@@ -71,7 +74,11 @@ public class WxPayController {
         return payResponse;
     }
 
+    @ApiOperation("添加支付结果和钱")
+    public SzpJsonResult<?> addPayEndAndMoney(@RequestBody AddPayEndAndMoneyRequest request){
 
+        return SzpJsonResult.ok();
+    }
     @Autowired
     private PayNotifyMapper payNotifyMapper;
     /**

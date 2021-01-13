@@ -135,5 +135,8 @@
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
 
+                <table tableName="t_wx_fast_register" domainObjectName="WxFastRegister">
+                    <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+                </table>
     </context>
 </generatorConfiguration>
