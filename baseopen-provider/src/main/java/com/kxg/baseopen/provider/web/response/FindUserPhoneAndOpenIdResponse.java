@@ -11,4 +11,5 @@ public class FindUserPhoneAndOpenIdResponse {
     private String appId;
     private String openId;
     private String phoneNumber;
+    private Boolean userExist=Boolean.FALSE;
 }

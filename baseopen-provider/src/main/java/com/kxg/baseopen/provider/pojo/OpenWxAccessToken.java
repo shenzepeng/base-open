@@ -1,8 +1,10 @@
 package com.kxg.baseopen.provider.pojo;
 
+import lombok.Data;
+
 import java.util.Date;
 import javax.persistence.*;
-
+@Data
 @Table(name = "t_open_wx_access_token")
 public class OpenWxAccessToken {
     @Id

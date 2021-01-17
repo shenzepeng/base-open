@@ -32,7 +32,6 @@ public class GetProCodeTest {
         sb.append("</a >");
         sb.append("</body>");
         sb.append("</html>");
-
         System.out.println(sb.toString());
     }
 
@@ -52,4 +51,11 @@ public class GetProCodeTest {
 //        DownLoadFileUtils.downLoadFromUrl(P12_URL,P12_PATH,P12_FILE_PATH);
 //        System.out.println(P12_PATH+"/"+P12_FILE_PATH);
 //    }
+   @NacosValue(value = "${WX_CALL_BACK_URL}",autoRefreshed = true)
+    private String WX_CALL_BACK_URL;
+
+    @Test
+    public  void testNacos(){
+        System.out.println(WX_CALL_BACK_URL);
+    }
 }

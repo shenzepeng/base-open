@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -55,6 +56,7 @@ public class TokenServiceImpl implements TokenService {
             return componentAccessToken;
         }
         OpenWxAccessToken openWxAccessToken = lastAccessToken.get(0);
+        log.info("openWxAccessToken {}",openWxAccessToken);
         if (Long.parseLong(openWxAccessToken.getExpirationTime())<System.currentTimeMillis()){
             String componentAccessToken = getComponentToken();
             log.info("componentAccessToken {}",componentAccessToken);
@@ -131,6 +133,9 @@ public class TokenServiceImpl implements TokenService {
         String accessToken = HttpClientUtil.postJson(API_COMPONENT_TOKEN_URL, componentMsgHap);
         WxOpenComponentAccessToken componentAccessToken = WxOpenComponentAccessToken.fromJson(accessToken);
         log.info("WxOpenComponentAccessToken {}", JsonUtils.convertObjectToJSON(componentAccessToken));
+        if (StringUtils.isEmpty(componentAccessToken.getComponentAccessToken())){
+            throw new RuntimeException("get accessToken error");
+        }
         return componentAccessToken.getComponentAccessToken();
     }
 

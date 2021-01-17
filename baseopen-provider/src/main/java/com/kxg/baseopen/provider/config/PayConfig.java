@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 
 /**
  * 要写注释呀
@@ -26,6 +27,10 @@ public class PayConfig {
     @SneakyThrows
     @PostConstruct
     public void initP12(){
+        File filePath=new File(P12_PATH);
+        if (!filePath.exists()){
+            filePath.mkdirs();
+        }
         DownLoadFileUtils.downLoadFromUrl(P12_URL,P12_FILE_NAME,P12_PATH);
     }
     @Bean

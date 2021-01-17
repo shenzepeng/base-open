@@ -17,14 +17,16 @@ import com.kxg.baseopen.provider.pojo.AuthorizerToken;
 import com.kxg.baseopen.provider.pojo.CallBackCode;
 import com.kxg.baseopen.provider.utils.HttpClientUtil;
 import com.kxg.baseopen.provider.utils.JsonUtils;
+import com.kxg.baseopen.provider.utils.LinuxCommandUtils;
+import com.kxg.baseopen.provider.web.response.GetUrlResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * 要写注释呀
@@ -52,7 +54,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      */
     @SneakyThrows
     @Override
-    public String getCustomerMakeSureUrl(String appId,String useQrCode) {
+    public GetUrlResponse getCustomerMakeSureUrl(String appId, String useQrCode) {
 //         String   redirectUrl  =   java.net.URLEncoder.encode(WX_CALL_BACK_URL,"utf-8");
         String   redirectUrl  =   WX_CALL_BACK_URL;
         String preAuthCode = getPreAuthCode();
@@ -90,6 +92,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         }
         StringBuilder sb=new StringBuilder();
         sb.append("<html style='height:100%;width:100%;padding:0;margin:0;'>");
+        sb.append("<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n" +
+                "<title>确认授权</title>" +
+                "</head>");
         sb.append("<body style='height:100%;width:100%;padding:0;margin:0;'>");
         sb.append("<a style='width:320px;height:70px;display:flex;justify-content:center;align-items: center;border:1px solid #3688FF;border-radius:10px;position:absolute;top:50%;left:50%;transform: translate(-50%,-50%); font-size:30px;font-weight:900;text-decoration: none; color: #3688FF;' href=\""+targetUrl.toString()+" \">");
         sb.append("点我进行授权登录");
@@ -97,7 +102,37 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         sb.append("</body>");
         sb.append("</html>");
         log.info("getCustomerMakeSureUrl {}",sb.toString());
-        return sb.toString();
+
+        /**
+         *  授权连接跳转需要从授权服务器中跳转
+         *  预先在本地服务器中生成html文件
+         *  TODO 授权成功后需要删除  分布式的时候会有问题 需要单独抽出服务
+         */
+        String fileName = UUID.randomUUID().toString()+ ".html";
+        String filePath="/static/file/";
+        File infoFile = new File(filePath);
+        if (!infoFile.exists()) {
+            infoFile.mkdirs();// 能创建多级目录
+        }
+        File file=new File(filePath+fileName);
+        if (!file.exists()){
+            file.createNewFile();//创建文件
+            file.setReadable(true);
+        }
+        Writer out = new FileWriter(file);
+        out.write(sb.toString());
+        out.close();
+        GetUrlResponse response=new GetUrlResponse();
+        response.setPage(sb.toString());
+        response.setUrl("http://www.shenzepengzuishuai.cn/static/"+fileName);
+//        Process exec = Runtime.getRuntime().exec("chmod -R 777 static/");//执行命令
+//        InputStreamReader inputStreamReader=new InputStreamReader(exec.getInputStream());
+//        LineNumberReader ir=new LineNumberReader(inputStreamReader);
+//        String line;
+//        while((line=ir.readLine())!=null){//输出结果
+//            System.out.println(line);
+//        }
+        return response;
     }
 
     /**

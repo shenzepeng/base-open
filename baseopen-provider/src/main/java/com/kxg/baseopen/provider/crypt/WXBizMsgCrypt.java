@@ -250,6 +250,9 @@ public class WXBizMsgCrypt {
 		// 提取密文
 		Object[] encrypt = XMLParse.extract(postData);
 		for (Object o : encrypt) {
+			if (null==o){
+				continue;
+			}
 			System.out.println(o.toString());
 		}
 		for (int i = 0; i < encrypt.length; i++) {

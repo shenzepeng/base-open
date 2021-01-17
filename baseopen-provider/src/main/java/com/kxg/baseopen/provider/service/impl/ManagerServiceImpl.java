@@ -44,6 +44,9 @@ public class ManagerServiceImpl implements ManagerService {
     public FindNeedHandlerInfoResponse findNeedHandlerInfo(FindNeedHandlerInfoRequest request) {
         NeedHandler needHandler = needHandlerDao.findByPrimaryKey(request.getId());
         FindNeedHandlerInfoResponse response=new FindNeedHandlerInfoResponse();
+        if (null==needHandler){
+            return response;
+        }
         AllNeedHandlerDto allNeedHandlerDto=new AllNeedHandlerDto();
         allNeedHandlerDto.setUserId(needHandler.getUserId());
         allNeedHandlerDto.setStatus(needHandler.getStatus());

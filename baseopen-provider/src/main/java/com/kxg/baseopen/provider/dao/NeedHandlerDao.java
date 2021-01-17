@@ -34,4 +34,11 @@ public class NeedHandlerDao {
     public NeedHandler findByPrimaryKey(Long id){
         return needHandlerMapper.selectByPrimaryKey(id);
     }
+
+    public List<NeedHandler> findNeedHandler(String appId){
+        Example example=new Example(NeedHandler.class);
+        example.createCriteria()
+                .andEqualTo("appId",appId);
+        return needHandlerMapper.selectByExample(example);
+    }
 }

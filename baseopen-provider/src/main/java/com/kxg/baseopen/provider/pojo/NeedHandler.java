@@ -33,6 +33,12 @@ public class NeedHandler {
     private Date updateTime;
 
     /**
+     * 小程序的appId
+     */
+    @Column(name = "app_id")
+    private String appId;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -126,5 +132,23 @@ public class NeedHandler {
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    /**
+     * 获取小程序的appId
+     *
+     * @return app_id - 小程序的appId
+     */
+    public String getAppId() {
+        return appId;
+    }
+
+    /**
+     * 设置小程序的appId
+     *
+     * @param appId 小程序的appId
+     */
+    public void setAppId(String appId) {
+        this.appId = appId == null ? null : appId.trim();
     }
 }

@@ -3,14 +3,19 @@ package com.kxg.baseopen.provider.openwx.impl;
 import com.kxg.baseopen.provider.common.WechatOpenProperties;
 import com.kxg.baseopen.provider.crypt.OpenSHA1;
 import com.kxg.baseopen.provider.crypt.WXBizMsgCrypt;
+import com.kxg.baseopen.provider.dao.NeedHandlerDao;
 import com.kxg.baseopen.provider.dao.VerifyTicketDao;
+import com.kxg.baseopen.provider.dto.request.ReleaseAuditedRequest;
 import com.kxg.baseopen.provider.openwx.AcceptWxService;
+import com.kxg.baseopen.provider.openwx.CodeManageService;
 import com.kxg.baseopen.provider.pojo.ComponentVerifyTicket;
+import com.kxg.baseopen.provider.pojo.NeedHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -19,6 +24,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +35,10 @@ import java.util.Map;
 public class AcceptWxServiceImpl implements AcceptWxService {
     @Autowired
     private VerifyTicketDao verifyTicketDao;
+    @Autowired
+    private NeedHandlerDao needHandlerDao;
+    @Autowired
+    private CodeManageService codeManageService;
     @Override
     public String receiverVerifyTicket(String requestBody, String timestamp,
                                        String nonce, String signature, String encType, String msgSignature) {
@@ -62,20 +72,104 @@ public class AcceptWxServiceImpl implements AcceptWxService {
     @Override
     public String weChatCallBack(String requestBody, String appId, String signature, String timestamp, String nonce, String openid, String encType, String msgSignature) {
 
-        if (!StringUtils.equalsIgnoreCase("aes", encType) || !!checkSignature(WechatOpenProperties.componentToken, timestamp, nonce, signature)) {
+        if (!StringUtils.equalsIgnoreCase("aes", encType) || !checkSignature(WechatOpenProperties.componentToken, timestamp, nonce, signature)) {
             throw new IllegalArgumentException("非法请求，可能属于伪造的请求！");
         }
         try {
-            String decryptMsgTicket = decryptMsg(requestBody, timestamp,
+            Map<String, String> decryptMsgGetMap = decryptMsgGetMap(requestBody, timestamp,
                     nonce, msgSignature);
-            if (StringUtils.isEmpty(decryptMsgTicket)) {
+            if (CollectionUtils.isEmpty(decryptMsgGetMap)) {
                 throw new RuntimeException("aes加密的消息出现问题，值为null");
+            }
+            List<NeedHandler> needHandler = needHandlerDao.findNeedHandler(appId);
+            if (CollectionUtils.isEmpty(needHandler)){
+                return "";
+            }
+            NeedHandler handler = needHandler.get(0);
+            //发布代码审核结果回调
+            if (decryptMsgGetMap.containsKey("Event")){
+                String event = decryptMsgGetMap.get("Event");
+                //审核成功
+                if ("weapp_audit_success".equalsIgnoreCase(event)){
+                    //type改为4
+                    handler.setStatus(4);
+                    needHandlerDao.updateNeedHandler(handler);
+                    //代码上线
+                    ReleaseAuditedRequest request=new ReleaseAuditedRequest();
+                    request.setAppId(appId);
+                    codeManageService.releaseAudited(request);
+                }
+                //审核失败
+                if ("weapp_audit_fail".equalsIgnoreCase(event)){
+                    //type改为3
+                    handler.setStatus(3);
+                    needHandlerDao.updateNeedHandler(handler);
+                }
+            }
+            //昵称结果回调，预售权码
+            if (decryptMsgGetMap.containsKey("Event")){
+                String event = decryptMsgGetMap.get("Event");
+                if ("wxa_nickname_audit".equalsIgnoreCase(event)){
+                    //审核成功
+                    String ret = decryptMsgGetMap.get("ret");
+                    if (!StringUtils.isEmpty(ret)){
+                        int parseInt = Integer.parseInt(ret);
+                        //success
+                        if (parseInt==3){
+                            //type改为3
+                            handler.setStatus(3);
+                            needHandlerDao.updateNeedHandler(handler);
+                        }
+                        //fail
+                        if (parseInt==2){
+                            //type改为2
+                            handler.setStatus(2);
+                            needHandlerDao.updateNeedHandler(handler);
+                        }
+                    }
+                }
+
+            }
+            //授权结果回调
+            if (decryptMsgGetMap.containsKey("InfoType")){
+                String event = decryptMsgGetMap.get("Event");
+                if ("wxa_nickname_audit".equalsIgnoreCase(event)){
+                    //审核成功
+                    String ret = decryptMsgGetMap.get("ret");
+                    if (!StringUtils.isEmpty(ret)){
+                        int parseInt = Integer.parseInt(ret);
+                        //success
+                        if (parseInt==3){
+                            //type改为3
+                            handler.setStatus(3);
+                            needHandlerDao.updateNeedHandler(handler);
+                        }
+                        //fail
+                        if (parseInt==2){
+                            //type改为2
+                            handler.setStatus(2);
+                            needHandlerDao.updateNeedHandler(handler);
+                        }
+                    }
+                }
+
             }
 
         }catch (Exception e){
 
         }
         return "out";
+    }
+
+
+    private Map<String, String> decryptMsgGetMap(String requestBody, String timestamp,
+                                                 String nonce, String msgSignature) throws Exception {
+        WXBizMsgCrypt pc = new WXBizMsgCrypt(WechatOpenProperties.componentToken, WechatOpenProperties.componentAesKey, WechatOpenProperties.componentAppId);
+        // 第三方收到公众号平台发送的消息
+        String decryptMsg = pc.decryptMsg(msgSignature, timestamp, nonce, requestBody);
+        log.info("decryptMsg pc.decryptMsg {}", decryptMsg);
+        Map<String, String> fromXml = xmlToMap(decryptMsg);
+        return fromXml;
     }
 
     private String decryptMsg(String requestBody, String timestamp,

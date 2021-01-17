@@ -1,5 +1,7 @@
 package com.kxg.baseopen.provider.openwx;
 
+import com.kxg.baseopen.provider.web.response.GetUrlResponse;
+
 /**
  * 预售权相关逻辑
  */
@@ -31,7 +33,7 @@ public interface AuthorizationService {
      * @param appId
      * @return
      */
-    String getCustomerMakeSureUrl(String appId,String useQrCode);
+    GetUrlResponse getCustomerMakeSureUrl(String appId, String useQrCode);
 
     /**
      * 微信请求的callbackurl

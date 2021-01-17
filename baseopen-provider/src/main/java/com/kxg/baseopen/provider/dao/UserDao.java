@@ -36,6 +36,7 @@ public class UserDao {
                     .andEqualTo("openId", openId);
         }else {
             example.createCriteria()
+                    .andEqualTo("appId", appId)
                     .andEqualTo("phoneNumber",phoneNumber);
         }
         return userInfoMapper.selectByExample(example);

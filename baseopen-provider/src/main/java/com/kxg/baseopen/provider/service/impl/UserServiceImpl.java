@@ -2,7 +2,6 @@ package com.kxg.baseopen.provider.service.impl;
 
 import com.kxg.baseopen.provider.dao.UserDao;
 import com.kxg.baseopen.provider.exception.KxgException;
-import com.kxg.baseopen.provider.mapper.UserInfoMapper;
 import com.kxg.baseopen.provider.pojo.UserInfo;
 import com.kxg.baseopen.provider.service.UserService;
 import com.kxg.baseopen.provider.web.request.AddUserInfoRequest;
@@ -13,11 +12,9 @@ import com.kxg.baseopen.provider.web.response.IntegerResult;
 import com.kxg.baseopen.provider.web.response.SmsLoginResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
 import java.util.List;
 
 /**
@@ -48,12 +45,13 @@ public class UserServiceImpl implements UserService {
             }
         }
         List<UserInfo> userInfo = userDao.findUserInfo(request.getAppId(), request.getOpenId(), request.getPhoneNumber());
-        if (CollectionUtils.isEmpty(userInfo)){
-            throw new KxgException("99999","没有当前的用户信息");
-        }
         FindUserPhoneAndOpenIdResponse response=new FindUserPhoneAndOpenIdResponse();
+        if (CollectionUtils.isEmpty(userInfo)){
+            return response;
+        }
         BeanUtils.copyProperties(userInfo.get(0),response);
         response.setUserId(userInfo.get(0).getId());
+        response.setUserExist(Boolean.TRUE);
         return response;
     }
 

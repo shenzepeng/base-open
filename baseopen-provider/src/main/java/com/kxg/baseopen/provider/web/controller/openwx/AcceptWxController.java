@@ -91,6 +91,19 @@ public class AcceptWxController {
         saveCallInfo.setTimestamp(timestamp);
         saveCallInfo.setSignature(signature);
         saveCallInfoMapper.insertSelective(saveCallInfo);
+        log.info(
+                "\n接收微信请求：[signature=[{}], encType=[{}], msgSignature=[{}],"
+                        + " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
+                signature, encType, msgSignature, timestamp, nonce, requestBody);
+        String weChatCallBack = acceptWxService.weChatCallBack(requestBody,
+                appId,
+                signature,
+                timestamp,
+                nonce,
+                openid,
+                encType,
+                msgSignature);
+        log.info("weChatCallBack {}",weChatCallBack);
         return "";
     }
 }

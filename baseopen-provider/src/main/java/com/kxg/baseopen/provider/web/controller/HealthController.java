@@ -50,7 +50,7 @@ public class HealthController {
         System.out.println("解密后明文: " + result2);
 
         Map<String, String> fromXml = xmlToMap(result2);
-        log.info("decryptMsg {}", fromXml);
+        log.info("decryptMsg fromXml {}", fromXml);
         return fromXml.toString();
     }
     @SneakyThrows
